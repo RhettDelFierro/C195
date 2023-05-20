@@ -9,10 +9,9 @@ public class Division {
     private String division;
     private String createDate;
 
-    public Division(int divisionId, String division, String createDate) {
+    public Division(int divisionId, String division) {
         this.divisionId = divisionId;
         this.division = division;
-        this.createDate = createDate;
     }
 
     /**

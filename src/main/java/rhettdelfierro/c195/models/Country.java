@@ -9,10 +9,9 @@ public class Country {
     private String country;
     private String createDate;
 
-    public Country(int countryId, String country, String createDate) {
+    public Country(int countryId, String country) {
         this.countryId = countryId;
         this.country = country;
-        this.createDate = createDate;
     }
 
     /**
@@ -31,5 +30,21 @@ public class Country {
      */
     public void addDivision(Division division) {
         divisions.add(division);
+    }
+
+    /**
+     * Country ID getter
+     *
+     * @return the countryId
+     */
+    public int getId() {
+        return countryId;
+    }
+
+    /**
+     * Set divisions.
+     */
+    public void setDivisions(ObservableList<Division> divisions) {
+        this.divisions = divisions;
     }
 }

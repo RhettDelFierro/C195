@@ -8,9 +8,11 @@ public class Appointment {
     private String type;
     private String start;
     private String end;
-    private String createDate;
+    private int customerId;
+    private int userId;
+    private int contactId;
 
-    public Appointment(int appointmentId, String title, String description, String location, String type, String start, String end, String createDate) {
+    public Appointment(int appointmentId, String title, String description, String location, String type, String start, String end, int customerId, int userId, int contactId) {
         this.appointmentId = appointmentId;
         this.title = title;
         this.description = description;
@@ -18,6 +20,8 @@ public class Appointment {
         this.type = type;
         this.start = start;
         this.end = end;
-        this.createDate = createDate;
+        this.customerId = customerId;
+        this.userId = userId;
+        this.contactId = contactId;
     }
 }

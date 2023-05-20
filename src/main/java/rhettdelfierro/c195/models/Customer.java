@@ -10,15 +10,24 @@ public class Customer {
     private String address;
     private String postalCode;
     private String phone;
-    private String createDate;
+    private int divisionId;
 
-    public Customer(int customerId, String customerName, String address, String postalCode, String phone, String createDate) {
+    public Customer(int customerId, String customerName, String address, String postalCode, String phone, int divisionId) {
         this.customerId = customerId;
         this.customerName = customerName;
         this.address = address;
         this.postalCode = postalCode;
         this.phone = phone;
-        this.createDate = createDate;
+        this.divisionId = divisionId;
+    }
+
+    /**
+     * Customer ID getter
+     *
+     * @return the customerId
+     */
+    public int getCustomerId() {
+        return customerId;
     }
 
     /**
@@ -31,6 +40,14 @@ public class Customer {
     }
 
     /**
+     *  Appointments setter
+     * @param appointments ObservableList<Appointment> the appointments to set
+     */
+    public void setAppointments(ObservableList<Appointment> appointments) {
+        this.appointments = appointments;
+    }
+
+    /**
      * Adds appointment to list.
      *
      * @param appointment the appointment to add
@@ -38,4 +55,6 @@ public class Customer {
     public void addAppointment(Appointment appointment) {
         appointments.add(appointment);
     }
+
+
 }
