@@ -9,12 +9,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class ContactStore {
-    public static ObservableList<Contact> contacts = FXCollections.observableArrayList();
-    public static void fetchAll() throws SQLException {
+    public static ObservableList<Contact> fetchAll() throws SQLException {
         String sql = "SELECT * FROM CONTACTS";
         PreparedStatement ps = JDBC.connection.prepareStatement(sql);
         ResultSet rs = ps.executeQuery();
-        contacts.clear();
+        ObservableList<Contact> contacts = FXCollections.observableArrayList();
         while (rs.next()) {
             contacts.add(new Contact(
                     rs.getInt("Contact_ID"),
@@ -22,6 +21,7 @@ public class ContactStore {
                     rs.getString("Email")
             ));
         }
+        return contacts;
     }
 
     public static Contact selectContactById(int contactId) throws SQLException {

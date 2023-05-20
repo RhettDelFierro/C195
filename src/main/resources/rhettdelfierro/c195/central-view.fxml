@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="530.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="rhettdelfierro.c195.controllers.MainController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="530.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="rhettdelfierro.c195.controllers.CentralController">
     <children>
         <HBox layoutX="13.0" prefHeight="43.0" prefWidth="975.0">
             <children>
@@ -141,7 +141,7 @@
                                         <Insets right="15.0" top="20.0" />
                                     </padding>
                                 </GridPane>
-                                <TableView fx:id="productsTableView" prefHeight="244.0" prefWidth="454.0">
+                                <TableView fx:id="customersTableView" prefHeight="244.0" prefWidth="454.0">
                                     <columns>
                                         <TableColumn fx:id="productIdCol" prefWidth="75.0" text="Product ID" />
                                         <TableColumn fx:id="productNameCol" prefWidth="112.0" text="Product Name" />

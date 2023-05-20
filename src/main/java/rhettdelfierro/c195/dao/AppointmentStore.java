@@ -9,7 +9,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class AppointmentStore {
-    private static ObservableList<Appointment> appointments = FXCollections.observableArrayList();
     public static int insert(String title, String description, String location, String type, String start, String end, int customerId, int userId, int contactId) throws SQLException {
         String sql = "INSERT INTO APPOINTMENTS (Title, Description, Location, Type, Start, End, Customer_ID, User_ID, Contact_ID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         PreparedStatement ps = JDBC.connection.prepareStatement(sql);
@@ -51,32 +50,9 @@ public class AppointmentStore {
         return rowsAffected;
     }
 
-    public static void fetchAll() throws SQLException {
+    public static ObservableList<Appointment> fetchAll() throws SQLException {
         String sql = "SELECT * FROM APPOINTMENTS";
         PreparedStatement ps = JDBC.connection.prepareStatement(sql);
-        ResultSet rs = ps.executeQuery();
-        appointments.clear();
-//        ObservableList<Appointment> appointments = FXCollections.observableArrayList();
-        while (rs.next()) {
-            appointments.add(new Appointment(
-                    rs.getInt("Appointment_ID"),
-                    rs.getString("Title"),
-                    rs.getString("Description"),
-                    rs.getString("Location"),
-                    rs.getString("Type"),
-                    rs.getString("Start"),
-                    rs.getString("End"),
-                    rs.getInt("Customer_ID"),
-                    rs.getInt("User_ID"),
-                    rs.getInt("Contact_ID")
-            ));
-        }
-    }
-
-    public static ObservableList<Appointment> select(int appointmentId) throws SQLException {
-        String sql = "SELECT * FROM APPOINTMENTS WHERE Appointment_ID = ?";
-        PreparedStatement ps = JDBC.connection.prepareStatement(sql);
-        ps.setInt(1, appointmentId);
         ResultSet rs = ps.executeQuery();
         ObservableList<Appointment> appointments = FXCollections.observableArrayList();
         while (rs.next()) {
@@ -105,6 +81,50 @@ public class AppointmentStore {
         String sql = "SELECT * FROM APPOINTMENTS WHERE Customer_ID = ?";
         PreparedStatement ps = JDBC.connection.prepareStatement(sql);
         ps.setInt(1, customerId);
+        ResultSet rs = ps.executeQuery();
+        ObservableList<Appointment> appointments = FXCollections.observableArrayList();
+        while (rs.next()) {
+            appointments.add(new Appointment(
+                    rs.getInt("Appointment_ID"),
+                    rs.getString("Title"),
+                    rs.getString("Description"),
+                    rs.getString("Location"),
+                    rs.getString("Type"),
+                    rs.getString("Start"),
+                    rs.getString("End"),
+                    rs.getInt("Customer_ID"),
+                    rs.getInt("User_ID"),
+                    rs.getInt("Contact_ID")
+            ));
+        }
+        return appointments;
+    }
+
+    public static ObservableList<Appointment> selectBySimpleQuery(String sql) throws SQLException {
+        PreparedStatement ps = JDBC.connection.prepareStatement(sql);
+        ResultSet rs = ps.executeQuery();
+        ObservableList<Appointment> appointments = FXCollections.observableArrayList();
+        while (rs.next()) {
+            appointments.add(new Appointment(
+                    rs.getInt("Appointment_ID"),
+                    rs.getString("Title"),
+                    rs.getString("Description"),
+                    rs.getString("Location"),
+                    rs.getString("Type"),
+                    rs.getString("Start"),
+                    rs.getString("End"),
+                    rs.getInt("Customer_ID"),
+                    rs.getInt("User_ID"),
+                    rs.getInt("Contact_ID")
+            ));
+        }
+        return appointments;
+    }
+
+    public static ObservableList<Appointment> selectByTitle(String title) throws SQLException {
+        String sql = "SELECT * FROM APPOINTMENTS WHERE TITLE LIKE ?";
+        PreparedStatement ps = JDBC.connection.prepareStatement(sql);
+        ps.setString(1, "%" + title + "%");
         ResultSet rs = ps.executeQuery();
         ObservableList<Appointment> appointments = FXCollections.observableArrayList();
         while (rs.next()) {

@@ -20,6 +20,7 @@ import rhettdelfierro.c195.models.Inventory; //Inventory will be the JDBC probab
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 /**
@@ -28,7 +29,7 @@ import java.util.ResourceBundle;
  * RUNTIME ERROR: parseInt() would throw an IOException here, but we guard against that by using the checkValidInt
  *                helper functions.
  */
-public class MainController implements Initializable {
+public class CentralController implements Initializable {
     Stage stage;
     Parent scene;
 
@@ -60,13 +61,13 @@ public class MainController implements Initializable {
     private TableColumn<Customer, Double> productPriceCol;
 
     @FXML
-    private TableView<Customer> productsTableView;
+    private TableView<Customer> customersTableView;
 
     @FXML
     private TextField searchAppointmentTxt;
 
     @FXML
-    private TextField searchCustomerTxt;
+    private TextField searchCustomerTitleTxt;
 
     /**
      * Helper method to change scenes
@@ -116,24 +117,15 @@ public class MainController implements Initializable {
     /**
      * Deletes product if there are no associated parts.
      * @param event Event object.
+     * @throws SQLException SQLException that will throw if the SQL fails.
      */
     @FXML
-    void onActionDeleteCustomer(ActionEvent event) {
-        Customer productForDeletion = productsTableView.getSelectionModel().getSelectedItem();
-        if (productForDeletion == null) {
+    void onActionDeleteCustomer(ActionEvent event) throws SQLException {
+        Customer customerForDeletion = customersTableView.getSelectionModel().getSelectedItem();
+        if (customerForDeletion == null) {
             Errors.showErrorDialog("There is no product selected for deletion.");
-        } else if (productForDeletion.getAllAssociatedAppointments().size() == 0) {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Confirm deletion.");
-            alert.setContentText("Are you sure you want to delete the product: " + productForDeletion.getName() + "?");
-            alert.showAndWait();
-            if (alert.getResult() != ButtonType.OK) {
-                return;
-            }
-            Inventory.deleteCustomer(productsTableView.getSelectionModel().getSelectedItem());
-        } else {
-            Errors.showErrorDialog("You cannot delete a product that has associated parts.");
         }
+        ListManagement.deleteCustomer(customersTableView.getSelectionModel().getSelectedItem());
     }
 
     /**
@@ -160,10 +152,10 @@ public class MainController implements Initializable {
      * @param event Event object.
      */
     @FXML
-    void onActionFilterCustomer(ActionEvent event) {
-        String searchText = searchCustomerTxt.getText();
+    void onActionFilterCustomer(ActionEvent event) throws SQLException {
+        String searchText = searchCustomerTitleTxt.getText();
         if (searchText.isEmpty()) {
-            productsTableView.setItems(ListManagement.getAllCustomers());
+            customersTableView.setItems(ListManagement.getAllCustomers());
         } else {
             ObservableList<Customer> results = ListManagement.searchCustomers(searchText);
             if (results.isEmpty()) {
@@ -172,7 +164,7 @@ public class MainController implements Initializable {
                 alert.setContentText("No matching products found for your search term: " + searchText + ".");
                 alert.showAndWait();
             } else {
-                productsTableView.setItems(results);
+                customersTableView.setItems(results);
             }
         }
     }
@@ -226,7 +218,7 @@ public class MainController implements Initializable {
         loader.setLocation(Helpers.class.getResource("/rhettdelfierro/c195/modify-product.fxml"));
         loader.load();
         ModifyCustomer controller = loader.getController();
-        controller.sendCustomer(productsTableView.getSelectionModel().getSelectedItem());
+        controller.sendCustomer(customersTableView.getSelectionModel().getSelectedItem());
 
         stage = (Stage)((Button)event.getSource()).getScene().getWindow();
         Parent scene = loader.getRoot();
@@ -243,6 +235,23 @@ public class MainController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        try {
+            ListManagement.fetchAll();
+            partsTableView.setItems(ListManagement.getAllAppointments());
+
+            partIdCol.setCellValueFactory(new PropertyValueFactory<>("id"));
+            partNameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
+            partInventoryLvlCol.setCellValueFactory(new PropertyValueFactory<>("stock"));
+            partPriceCol.setCellValueFactory(new PropertyValueFactory<>("price"));
+
+            customersTableView.setItems(ListManagement.getAllCustomers());
+            productIdCol.setCellValueFactory(new PropertyValueFactory<>("id"));
+            productNameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
+            productInventoryLvlCol.setCellValueFactory(new PropertyValueFactory<>("stock"));
+            productPriceCol.setCellValueFactory(new PropertyValueFactory<>("price"));
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
         partsTableView.setItems(Inventory.getAllAppointments());
 
         partIdCol.setCellValueFactory(new PropertyValueFactory<>("id"));
@@ -250,7 +259,7 @@ public class MainController implements Initializable {
         partInventoryLvlCol.setCellValueFactory(new PropertyValueFactory<>("stock"));
         partPriceCol.setCellValueFactory(new PropertyValueFactory<>("price"));
 
-        productsTableView.setItems(Inventory.getAllCustomers());
+        customersTableView.setItems(Inventory.getAllCustomers());
         productIdCol.setCellValueFactory(new PropertyValueFactory<>("id"));
         productNameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
         productInventoryLvlCol.setCellValueFactory(new PropertyValueFactory<>("stock"));

@@ -1,161 +1,124 @@
 package rhettdelfierro.c195.helper;
 
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
-import rhettdelfierro.c195.models.Appointment;
-import rhettdelfierro.c195.models.Customer;
+import javafx.scene.control.ButtonType;
+import rhettdelfierro.c195.dao.AppointmentStore;
+import rhettdelfierro.c195.dao.ContactStore;
+import rhettdelfierro.c195.dao.CountryStore;
+import rhettdelfierro.c195.dao.CustomerStore;
+import rhettdelfierro.c195.models.*;
 
-import java.util.Comparator;
+import java.sql.SQLException;
 
 public class ListManagement {
+    public static ObservableList<Appointment> appointments = FXCollections.observableArrayList();
+    public static ObservableList<Customer> customers = FXCollections.observableArrayList();
+    public static ObservableList<Country> countries = FXCollections.observableArrayList();
+    public static ObservableList<Contact> contacts = FXCollections.observableArrayList();
+    public static User currentUser = null;
+
     /**
-     * Helper method to search for parts by name or id.
+     * Will re-populate date.
+     * @param user the current user once logged in.
+     * @throws SQLException
+     */
+    public static void fetchAll(User user) throws SQLException {
+        appointments = AppointmentStore.fetchAll();
+        customers = CustomerStore.fetchAll();
+        countries = CountryStore.fetchAll();
+        contacts = ContactStore.fetchAll();
+        currentUser = user;
+    }
+
+    /**
+     * Will re-populate date.
+     * @throws SQLException
+     */
+    public static void fetchAll() throws SQLException {
+        appointments = AppointmentStore.fetchAll();
+        customers = CustomerStore.fetchAll();
+        countries = CountryStore.fetchAll();
+        contacts = ContactStore.fetchAll();
+    }
+
+    /**
+     * Getter for appointments.
+     */
+    public static ObservableList<Appointment> getAllAppointments() {
+        return appointments;
+    }
+
+    /**
+     * Getter for customers.
+     */
+    public static ObservableList<Customer> getAllCustomers() {
+        return customers;
+    }
+
+    /**
+     * Helper method to get appointments for this month.
      *
-     * @param searchText the text to search for
-     * @return the list of parts
+     * @throws SQLException
      */
-    public static ObservableList<Appointment> searchAppointments(String searchText) {
-        ObservableList<Appointment> parts = Inventory.lookupAppointment(searchText);
-        // defining out the error here by using regex to check for int:
-        if (checkValidInt(searchText)) {
-            int partId = Integer.parseInt(searchText);
-            Appointment part = Inventory.lookupAppointment(partId);
-            // will only show if there's a matching part name or a matching part id. Not both.
-            if (part != null && parts.size() == 0) {
-                parts.add(part);
-            }
+    public static ObservableList<Appointment> searchAppointmentsByCurrentTime(String timeFrame) throws SQLException {
+        String sql = null;
+        if (timeFrame.equals("month")) {
+            sql = "SELECT * FROM APPOINTMENTS WHERE MONTH(Start) = MONTH(NOW()) AND YEAR(Start) = YEAR(NOW())";
+        } else {
+            sql = "SELECT * FROM APPOINTMENTS WHERE WEEK(Start) = WEEK(NOW()) AND YEAR(Start) = YEAR(NOW())";
         }
-        return parts;
+        ObservableList<Appointment> appointments = AppointmentStore.selectBySimpleQuery(sql);
+        return appointments;
     }
 
     /**
-     * Helper method to search for products by name or id.
-     *
-     * @param searchText the text to search for
-     * @return the list of products
-     * RUNTIME ERROR: parseInt() would throw an IOException here, but we guard against that by using the checkValidInt
-     *                helper functions.
+     * Delete Customer.
+     * @param customer the customer to delete.
+     * @throws SQLException
      */
-    public static ObservableList<Customer> searchCustomers(String searchText) {
-        ObservableList<Customer> products = Inventory.lookupCustomer(searchText);
-        // defining out the error here by using regex to check for int:
-        if (checkValidInt(searchText)) {
-            int productId = Integer.parseInt(searchText);
-            Customer product = Inventory.lookupCustomer(productId);
-            // will only show if there's a matching product name or a matching product id. Not both.
-            if (product != null && products.size() == 0) {
-                products.add(product);
-            }
+    public static void deleteCustomer(Customer customer) throws SQLException {
+        ObservableList<Appointment> appointments = AppointmentStore.selectByCustomerId(customer.getCustomerId());
+        if (appointments.size() > 0) {
+            Errors.showErrorDialog("Cannot delete customer with appointments. PLease delete these appointments first.");
+            return;
         }
-        return products;
-    }
-
-    /**
-     * Helper to parse strings for valid integers. Often used before Integer.parseInt() and other casting.
-     * @param str the string to check.
-     * @return boolean whether the string is a valid integer.
-     */
-    public static boolean checkValidInt(String str){
-        return str.matches("^-?\\d+$");
-    }
-
-    /**
-     * Helper to show error dialogs.
-     * @param message the error message to display.
-     */
-    public static void showErrorDialog(String message){
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Program error.");
-        alert.setContentText(message);
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirm deletion.");
+        alert.setContentText("Are you sure you want to delete the customer: " + customer.getCustomerName() + "?");
         alert.showAndWait();
+        if (alert.getResult() != ButtonType.OK) {
+            return;
+        }
+        CustomerStore.delete(customer.getCustomerId());
+        customers = CustomerStore.fetchAll();
     }
 
     /**
-     * Helper to show warning dialogs. This is really not used in the app as most warnings are errors.
-     * @param message the warning message to display.
+     * Delete Appointment.
+     * @param appointment the appointment to delete.
+     * @throws SQLException
      */
-    public static void showWarningDialog(String message){
-        Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle("Continue?");
-        alert.setContentText(message);
+    public static void deleteAppointment(Appointment appointment) throws SQLException {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirm deletion.");
+        alert.setContentText("Are you sure you want to delete the appointment: " + appointment.getTitle() + "?");
         alert.showAndWait();
-    }
-
-    /**
-     * Helper to parse strings for valid doubles. Often used before to check if prices were correctly entered.
-     * @param str string to parse
-     * @return boolean whether the string is a valid double.
-     */
-    public static boolean checkValidDouble(String str){
-        return str.matches("^[-+]?\\d*\\.?\\d+$");
-    }
-
-    /**
-     * Helper to find the given part by id and return its index from the store.
-     * @param id the id of the part to find.
-     * @return index of the part in the store.
-     */
-    public static int findIndexForAppointment(int id) {
-        ObservableList<Appointment> allAppointments = Inventory.getAllAppointments();
-
-        for (int i = 0; i < allAppointments.size(); i++) {
-            if (allAppointments.get(i).getId() == id) {
-                return i;
-            }
+        if (alert.getResult() != ButtonType.OK) {
+            return;
         }
-        return -1;
+        AppointmentStore.delete(appointment.getAppointmentId());
+        appointments = AppointmentStore.fetchAll();
     }
 
     /**
-     * Helper to find the given product by id and return its index from the store.
-     * @param id the id of the product to find.
-     * @return index of the product in the store.
-     * FUTURE ENHANCEMENT: Could have overloaded with parts.
+     * Search for customers by given query.
+     * @param query sql query string.
+     * @throws SQLException
      */
-    public static int findIndexForCustomer(int id) {
-        ObservableList<Customer> allCustomers = Inventory.getAllCustomers();
-
-        for (int i = 0; i < allCustomers.size(); i++) {
-            if (allCustomers.get(i).getId() == id) {
-                return i;
-            }
-        }
-        return -1;
-    }
-
-    /**
-     * This will generate a new part id based on the next available integer for partId.
-     * @return the new part id
-     */
-    public static int getAutoGeneratedAppointmentId() {
-        int id = 1;
-        ObservableList<Appointment> allAppointments = Inventory.getAllAppointments();
-        ObservableList<Appointment> sortedAppointments = allAppointments.sorted(Comparator.comparingInt(Appointment::getId));
-        for (Appointment part : sortedAppointments) {
-            if (part.getId() == id) {
-                id++;
-            } else if (part.getId() > id) {
-                break;
-            }
-        }
-        return id;
-    }
-
-    /**
-     * This will generate a new product id based on the next available integer for productId.
-     * @return the new product id
-     */
-    public static int getAutoGeneratedCustomerId() {
-        int id = 1;
-        ObservableList<Customer> allCustomers = Inventory.getAllCustomers();
-        ObservableList<Customer> sortedCustomers = allCustomers.sorted(Comparator.comparingInt(Customer::getId));
-        for (Customer product : sortedCustomers) {
-            if (product.getId() == id) {
-                id++;
-            } else if (product.getId() > id) {
-                break;
-            }
-        }
-        return id;
+    public static ObservableList<Appointment> searchByAppointmentTitle(String query) throws SQLException {
+        ObservableList<Appointment> appointments = AppointmentStore.selectByTitle(query);
+        return appointments;
     }
 }

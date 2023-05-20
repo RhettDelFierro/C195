@@ -7,7 +7,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class UserStore {
-    public static User currentUser = null;
     public static User login(String username, String password) throws SQLException {
         String sql = "SELECT * FROM USERS WHERE User_Name = ? AND Password = ?";
         JDBC.openConnection();
@@ -16,12 +15,11 @@ public class UserStore {
         ps.setString(2, password);
         ResultSet rs = ps.executeQuery();
         if (rs.next()) {
-            currentUser = new User(
+            return new User(
                     rs.getInt("User_ID"),
                     rs.getString("User_Name"),
                     rs.getString("Password")
             );
-            return currentUser;
         } else {
             return null;
         }

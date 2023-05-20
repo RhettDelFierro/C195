@@ -31,6 +31,105 @@ public class Customer {
     }
 
     /**
+     * Sets the ID of the customer.
+     *
+     * @param customerId the new customer ID
+     */
+    public void setCustomerId(int customerId) {
+        this.customerId = customerId;
+    }
+
+    /**
+     * Returns the name of the customer.
+     *
+     * @return the customer name
+     */
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    /**
+     * Sets the name of the customer.
+     *
+     * @param customerName the new customer name
+     */
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
+
+    /**
+     * Returns the address of the customer.
+     *
+     * @return the customer address
+     */
+    public String getAddress() {
+        return address;
+    }
+
+    /**
+     * Sets the address of the customer.
+     *
+     * @param address the new customer address
+     */
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    /**
+     * Returns the postal code of the customer.
+     *
+     * @return the customer postal code
+     */
+    public String getPostalCode() {
+        return postalCode;
+    }
+
+    /**
+     * Sets the postal code of the customer.
+     *
+     * @param postalCode the new customer postal code
+     */
+    public void setPostalCode(String postalCode) {
+        this.postalCode = postalCode;
+    }
+
+    /**
+     * Returns the phone number of the customer.
+     *
+     * @return the customer phone number
+     */
+    public String getPhone() {
+        return phone;
+    }
+
+    /**
+     * Sets the phone number of the customer.
+     *
+     * @param phone the new customer phone number
+     */
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    /**
+     * Returns the division ID of the customer.
+     *
+     * @return the division ID
+     */
+    public int getDivisionId() {
+        return divisionId;
+    }
+
+    /**
+     * Sets the division ID of the customer.
+     *
+     * @param divisionId the new division ID
+     */
+    public void setDivisionId(int divisionId) {
+        this.divisionId = divisionId;
+    }
+
+    /**
      * Appointments getter
      *
      * @return the appointments
@@ -40,7 +139,8 @@ public class Customer {
     }
 
     /**
-     *  Appointments setter
+     * Appointments setter
+     *
      * @param appointments ObservableList<Appointment> the appointments to set
      */
     public void setAppointments(ObservableList<Appointment> appointments) {

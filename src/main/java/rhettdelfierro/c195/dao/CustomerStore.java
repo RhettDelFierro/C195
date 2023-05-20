@@ -10,7 +10,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class CustomerStore {
-    public static ObservableList<Customer> customers = FXCollections.observableArrayList();
     public static int insert(String name, String address, String postalCode, String phone, int divisionId) throws SQLException {
         String sql = "INSERT INTO CUSTOMERS (Customer_Name, Address, Postal_Code, Phone, Division_ID) VALUES (?, ?, ?, ?, ?)";
         PreparedStatement ps = JDBC.connection.prepareStatement(sql);
@@ -44,7 +43,7 @@ public class CustomerStore {
         return rowsAffected;
     }
 
-    public static void fetchAll() throws SQLException {
+    public static ObservableList<Customer> fetchAll() throws SQLException {
         String sql = "SELECT * FROM CUSTOMERS";
         PreparedStatement ps = JDBC.connection.prepareStatement(sql);
         ResultSet rs = ps.executeQuery();
@@ -64,28 +63,8 @@ public class CustomerStore {
             ObservableList<Appointment> appointments = AppointmentStore.selectByCustomerId(customer.getCustomerId());
             customer.setAppointments(appointments);
         }
-    }
-
-    public static ObservableList<Customer> select(int customerId) throws SQLException {
-        String sql = "SELECT * FROM CUSTOMERS WHERE Customer_ID = ?";
-        PreparedStatement ps = JDBC.connection.prepareStatement(sql);
-        ps.setInt(1, customerId);
-        ResultSet rs = ps.executeQuery();
-        ObservableList<Customer> customers = FXCollections.observableArrayList();
-        while (rs.next()) {
-            customers.add(new Customer(
-                    rs.getInt("Customer_ID"),
-                    rs.getString("Customer_Name"),
-                    rs.getString("Address"),
-                    rs.getString("Postal_Code"),
-                    rs.getString("Phone"),
-                    rs.getInt("Division_ID")
-            ));
-        }
-        for (Customer customer : customers) {
-            ObservableList<Appointment> appointments = AppointmentStore.selectByCustomerId(customer.getCustomerId());
-            customer.setAppointments(appointments);
-        }
         return customers;
     }
+
+
 }
