@@ -11,9 +11,22 @@ public class Appointment {
     private int customerId;
     private int userId;
     private int contactId;
+    private String contactName;
 
     public Appointment(int appointmentId, String title, String description, String location, String type, String start, String end, int customerId, int userId, int contactId) {
         this.appointmentId = appointmentId;
+        this.title = title;
+        this.description = description;
+        this.location = location;
+        this.type = type;
+        this.start = start;
+        this.end = end;
+        this.customerId = customerId;
+        this.userId = userId;
+        this.contactId = contactId;
+    }
+
+    public Appointment(String title, String description, String location, String type, String start, String end, int customerId, int userId, int contactId) {
         this.title = title;
         this.description = description;
         this.location = location;
@@ -205,4 +218,21 @@ public class Appointment {
         this.contactId = contactId;
     }
 
+    /**
+     * Returns the contact name associated with the appointment.
+     *
+     * @return the associated contact name
+     */
+    public String getContactName() {
+        return contactName;
+    }
+
+    /**
+     * Sets the contact name associated with the appointment.
+     *
+     * @param contactName the new associated contact name
+     */
+    public void setContactName(String contactName) {
+        this.contactName = contactName;
+    }
 }

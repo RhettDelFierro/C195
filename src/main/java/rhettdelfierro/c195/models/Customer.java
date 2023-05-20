@@ -156,5 +156,12 @@ public class Customer {
         appointments.add(appointment);
     }
 
-
+    /**
+     * Return a string representation of the customer.
+     * @return a string representation of the customer.
+     */
+    @Override
+    public String toString() {
+        return customerName;
+    }
 }

@@ -9,18 +9,18 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class AppointmentStore {
-    public static int insert(String title, String description, String location, String type, String start, String end, int customerId, int userId, int contactId) throws SQLException {
+    public static int insert(Appointment appointment) throws SQLException {
         String sql = "INSERT INTO APPOINTMENTS (Title, Description, Location, Type, Start, End, Customer_ID, User_ID, Contact_ID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         PreparedStatement ps = JDBC.connection.prepareStatement(sql);
-        ps.setString(1, title);
-        ps.setString(2, description);
-        ps.setString(3, location);
-        ps.setString(4, type);
-        ps.setString(5, start);
-        ps.setString(6, end);
-        ps.setInt(7, customerId);
-        ps.setInt(8, userId);
-        ps.setInt(9, contactId);
+        ps.setString(1, appointment.getTitle());
+        ps.setString(2, appointment.getDescription());
+        ps.setString(3, appointment.getLocation());
+        ps.setString(4, appointment.getType());
+        ps.setString(5, appointment.getStart());
+        ps.setString(6, appointment.getEnd());
+        ps.setInt(7, appointment.getCustomerId());
+        ps.setInt(8, appointment.getUserId());
+        ps.setInt(9, appointment.getContactId());
         int rowsAffected = ps.executeUpdate();
         return rowsAffected;
     }

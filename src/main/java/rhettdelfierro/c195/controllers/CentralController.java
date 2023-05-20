@@ -15,8 +15,9 @@ import rhettdelfierro.c195.helper.Errors;
 import rhettdelfierro.c195.helper.ListManagement;
 import rhettdelfierro.c195.helper.Utils;
 import rhettdelfierro.c195.models.Appointment;
+import rhettdelfierro.c195.models.Contact;
 import rhettdelfierro.c195.models.Customer;
-import rhettdelfierro.c195.models.Inventory; //Inventory will be the JDBC probably.
+import rhettdelfierro.c195.models.User;
 
 import java.io.IOException;
 import java.net.URL;
@@ -34,31 +35,55 @@ public class CentralController implements Initializable {
     Parent scene;
 
     @FXML
-    private TableColumn<Appointment, Integer> partIdCol;
+    private TableColumn<Appointment, Integer> appointmentIdCol;
 
     @FXML
-    private TableColumn<Appointment, String> partNameCol;
+    private TableColumn<Appointment, String> titleCol;
 
     @FXML
-    private TableColumn<Appointment, Integer> partInventoryLvlCol;
+    private TableColumn<Appointment, String> descriptionCol;
 
     @FXML
-    private TableColumn<Appointment, Double> partPriceCol;
+    private TableColumn<Appointment, String> locationCol;
 
     @FXML
-    private TableView<Appointment> partsTableView;
+    private TableColumn<Appointment, String> contactNameCol;
 
     @FXML
-    private TableColumn<Customer, Integer> productIdCol;
+    private TableColumn<Appointment, String> typeCol;
 
     @FXML
-    private TableColumn<Customer, String> productNameCol;
+    private TableColumn<Appointment, String> startCol;
 
     @FXML
-    private TableColumn<Customer, Integer> productInventoryLvlCol;
+    private TableColumn<Appointment, String> endCol;
 
     @FXML
-    private TableColumn<Customer, Double> productPriceCol;
+    private TableColumn<Appointment, Integer> customerIDCol;
+
+    @FXML
+    private TableColumn<Appointment, Integer> UserIdCol;
+
+    @FXML
+    private TableView<Appointment> appointmentTableView;
+
+    @FXML
+    private TableColumn<Customer, Integer> customerIdCol;
+
+    @FXML
+    private TableColumn<Customer, String> customerNameCol;
+
+    @FXML
+    private TableColumn<Customer, String> addressCol;
+
+    @FXML
+    private TableColumn<Customer, String> postalCodeCol;
+
+    @FXML
+    private TableColumn<Customer, String> phoneCol;
+
+    @FXML
+    private TableColumn<Customer, String> divisionCol;
 
     @FXML
     private TableView<Customer> customersTableView;
@@ -77,7 +102,7 @@ public class CentralController implements Initializable {
      */
     @FXML
     void onActionAddAppointment(ActionEvent event) throws IOException {
-        Utils.changeScene(event, "add-part");
+        Utils.changeScene(event, "add-appointment");
     }
 
     /**
@@ -88,7 +113,7 @@ public class CentralController implements Initializable {
      */
     @FXML
     void onActionAddCustomer(ActionEvent event) throws IOException {
-        Helpers.changeScene(event, "add-product");
+        Utils.changeScene(event, "add-customer");
     }
 
     /**
@@ -97,19 +122,12 @@ public class CentralController implements Initializable {
      * @param event Action event
      */
     @FXML
-    void onActionDeleteAppointment(ActionEvent event) {
-        Appointment partForDeletion = partsTableView.getSelectionModel().getSelectedItem();
+    void onActionDeleteAppointment(ActionEvent event) throws SQLException {
+        Appointment partForDeletion = appointmentTableView.getSelectionModel().getSelectedItem();
         if (partForDeletion == null) {
             Errors.showErrorDialog("There is no part selected for deletion.");
         } else {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Confirm deletion.");
-            alert.setContentText("Are you sure you want to delete the part: " + partForDeletion.getName() + "?");
-            alert.showAndWait();
-            if (alert.getResult() != ButtonType.OK) {
-                return;
-            }
-            Inventory.deleteAppointment(partsTableView.getSelectionModel().getSelectedItem());
+            ListManagement.deleteAppointment(appointmentTableView.getSelectionModel().getSelectedItem());
         }
 
     }
@@ -133,38 +151,19 @@ public class CentralController implements Initializable {
      * @param event Event object.
      */
     @FXML
-    void onActionFilterAppointment(ActionEvent event) {
+    void onActionFilterAppointment(ActionEvent event) throws SQLException {
         String searchText = searchAppointmentTxt.getText();
         if (searchText.isEmpty()) {
-            partsTableView.setItems(Inventory.getAllAppointments());
+            appointmentTableView.setItems(ListManagement.getAllAppointments());
         } else {
-            ObservableList<Appointment> results = Helpers.searchAppointments(searchText);
-            if (results.isEmpty()) {
-                Errors.showErrorDialog("No matching parts found for your search term: " + searchText + ".");
-            } else {
-                partsTableView.setItems(results);
-            }
-        }
-    }
-
-    /**
-     * Will search for products by name or id and populate table.
-     * @param event Event object.
-     */
-    @FXML
-    void onActionFilterCustomer(ActionEvent event) throws SQLException {
-        String searchText = searchCustomerTitleTxt.getText();
-        if (searchText.isEmpty()) {
-            customersTableView.setItems(ListManagement.getAllCustomers());
-        } else {
-            ObservableList<Customer> results = ListManagement.searchCustomers(searchText);
+            ObservableList<Appointment> results = ListManagement.searchByAppointmentTitle(searchText);
             if (results.isEmpty()) {
                 Alert alert = new Alert(Alert.AlertType.WARNING);
                 alert.setTitle("Program error.");
-                alert.setContentText("No matching products found for your search term: " + searchText + ".");
+                alert.setContentText("No matching appointments found for your search term: " + searchText + ".");
                 alert.showAndWait();
             } else {
-                customersTableView.setItems(results);
+                appointmentTableView.setItems(results);
             }
         }
     }
@@ -189,10 +188,14 @@ public class CentralController implements Initializable {
     @FXML
     public void onActionModifyAppointment(ActionEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(Helpers.class.getResource("/rhettdelfierro/c195/modify-part.fxml"));
+        loader.setLocation(Utils.class.getResource("/rhettdelfierro/c195/modify-appointment.fxml"));
         loader.load();
-        ModifyAppointment controller = loader.getController();
-        controller.sendAppointment(partsTableView.getSelectionModel().getSelectedItem());
+        ModifyAppointmentController controller = loader.getController();
+        Appointment appointment = appointmentTableView.getSelectionModel().getSelectedItem();
+        Contact contact = ListManagement.getContactById(appointment.getContactId());
+        Customer customer = ListManagement.getCustomerById(appointment.getCustomerId());
+        User user = ListManagement.getUserById(appointment.getUserId());
+        controller.sendAppointment(appointment, contact, customer, user);
 
         stage = (Stage)((Button)event.getSource()).getScene().getWindow();
         Parent scene = loader.getRoot();
@@ -215,9 +218,9 @@ public class CentralController implements Initializable {
     @FXML
     public void onActionModifyCustomer(ActionEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(Helpers.class.getResource("/rhettdelfierro/c195/modify-product.fxml"));
+        loader.setLocation(Utils.class.getResource("/rhettdelfierro/c195/modify-customer.fxml"));
         loader.load();
-        ModifyCustomer controller = loader.getController();
+        ModifyCustomerController controller = loader.getController();
         controller.sendCustomer(customersTableView.getSelectionModel().getSelectedItem());
 
         stage = (Stage)((Button)event.getSource()).getScene().getWindow();
@@ -237,34 +240,21 @@ public class CentralController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
             ListManagement.fetchAll();
-            partsTableView.setItems(ListManagement.getAllAppointments());
+            appointmentTableView.setItems(ListManagement.getAllAppointments());
 
-            partIdCol.setCellValueFactory(new PropertyValueFactory<>("id"));
-            partNameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
-            partInventoryLvlCol.setCellValueFactory(new PropertyValueFactory<>("stock"));
-            partPriceCol.setCellValueFactory(new PropertyValueFactory<>("price"));
+            appointmentIdCol.setCellValueFactory(new PropertyValueFactory<>("id"));
+            titleCol.setCellValueFactory(new PropertyValueFactory<>("name"));
+            descriptionCol.setCellValueFactory(new PropertyValueFactory<>("stock"));
+            locationCol.setCellValueFactory(new PropertyValueFactory<>("price"));
 
             customersTableView.setItems(ListManagement.getAllCustomers());
-            productIdCol.setCellValueFactory(new PropertyValueFactory<>("id"));
-            productNameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
-            productInventoryLvlCol.setCellValueFactory(new PropertyValueFactory<>("stock"));
-            productPriceCol.setCellValueFactory(new PropertyValueFactory<>("price"));
+            customerIdCol.setCellValueFactory(new PropertyValueFactory<>("id"));
+            customerNameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
+            addressCol.setCellValueFactory(new PropertyValueFactory<>("stock"));
+            postalCodeCol.setCellValueFactory(new PropertyValueFactory<>("price"));
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        partsTableView.setItems(Inventory.getAllAppointments());
-
-        partIdCol.setCellValueFactory(new PropertyValueFactory<>("id"));
-        partNameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
-        partInventoryLvlCol.setCellValueFactory(new PropertyValueFactory<>("stock"));
-        partPriceCol.setCellValueFactory(new PropertyValueFactory<>("price"));
-
-        customersTableView.setItems(Inventory.getAllCustomers());
-        productIdCol.setCellValueFactory(new PropertyValueFactory<>("id"));
-        productNameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
-        productInventoryLvlCol.setCellValueFactory(new PropertyValueFactory<>("stock"));
-        productPriceCol.setCellValueFactory(new PropertyValueFactory<>("price"));
-
 //        partsTableView.getSelectionModel().select(Inventory.lookupAppointment(5));
     }
 }

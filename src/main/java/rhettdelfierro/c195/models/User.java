@@ -16,6 +16,61 @@ public class User {
     }
 
     /**
+     * Gets the user ID
+     *
+     * @return the user ID
+     */
+    public int getUserId() {
+        return userId;
+    }
+
+    /**
+     * Sets the user ID
+     *
+     * @param userId the user ID to set
+     */
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
+    /**
+     * Gets the user name
+     *
+     * @return the user name
+     */
+    public String getUserName() {
+        return userName;
+    }
+
+    /**
+     * Sets the user name
+     *
+     * @param userName the user name to set
+     */
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    /**
+     * Gets the password
+     *
+     * @return the password
+     */
+    public String getPassword() {
+        return password;
+    }
+
+    /**
+     * Sets the password
+     *
+     * @param password the password to set
+     */
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+
+    /**
      * Appointments getter
      *
      * @return the appointments
@@ -31,5 +86,14 @@ public class User {
      */
     public void addAppointment(Appointment appointment) {
         appointments.add(appointment);
+    }
+
+    /**
+     * REturn a string representation of the user.
+     * @return a string representation of the user.
+     */
+    @Override
+    public String toString() {
+        return userName;
     }
 }

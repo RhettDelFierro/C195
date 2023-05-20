@@ -1,5 +1,6 @@
 package rhettdelfierro.c195.dao;
 
+import javafx.collections.ObservableList;
 import rhettdelfierro.c195.models.User;
 
 import java.sql.PreparedStatement;
@@ -23,5 +24,20 @@ public class UserStore {
         } else {
             return null;
         }
+    }
+
+    public static ObservableList<User> fetchAll() throws SQLException {
+        String sql = "SELECT * FROM USERS";
+        PreparedStatement ps = JDBC.connection.prepareStatement(sql);
+        ResultSet rs = ps.executeQuery();
+        ObservableList<User> users = javafx.collections.FXCollections.observableArrayList();
+        while (rs.next()) {
+            users.add(new User(
+                    rs.getInt("User_ID"),
+                    rs.getString("User_Name"),
+                    rs.getString("****")
+            ));
+        }
+        return users;
     }
 }

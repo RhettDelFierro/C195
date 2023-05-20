@@ -16,6 +16,62 @@ public class Contact {
     }
 
     /**
+     * Sets the list of appointments.
+     * @param appointments an ObservableList of Appointment objects.
+     */
+    public void setAppointments(ObservableList<Appointment> appointments) {
+        this.appointments = appointments;
+    }
+
+    /**
+     * Returns the contact's ID.
+     * @return an integer representing the contact's ID.
+     */
+    public int getContactId() {
+        return contactId;
+    }
+
+    /**
+     * Sets the contact's ID.
+     * @param contactId an integer representing the contact's ID.
+     */
+    public void setContactId(int contactId) {
+        this.contactId = contactId;
+    }
+
+    /**
+     * Returns the contact's name.
+     * @return a String representing the contact's name.
+     */
+    public String getContactName() {
+        return contactName;
+    }
+
+    /**
+     * Sets the contact's name.
+     * @param contactName a String representing the contact's name.
+     */
+    public void setContactName(String contactName) {
+        this.contactName = contactName;
+    }
+
+    /**
+     * Returns the contact's email.
+     * @return a String representing the contact's email.
+     */
+    public String getEmail() {
+        return email;
+    }
+
+    /**
+     * Sets the contact's email.
+     * @param email a String representing the contact's email.
+     */
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    /**
      * Appointments getter
      *
      * @return the appointments
@@ -31,5 +87,14 @@ public class Contact {
      */
     public void addAppointment(Appointment appointment) {
         appointments.add(appointment);
+    }
+
+    /**
+     * Returns a String representation of the contact.
+     * @return a String representing the contact.
+     */
+    @Override
+    public String toString() {
+        return contactName;
     }
 }
