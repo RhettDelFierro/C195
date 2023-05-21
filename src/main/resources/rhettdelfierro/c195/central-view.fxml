@@ -80,7 +80,7 @@
                                         <TableColumn fx:id="typeCol" prefWidth="77.0" text="Type" />
                                         <TableColumn fx:id="descriptionCol" prefWidth="134.0" text="Description" />
                               <TableColumn fx:id="locationCol" prefWidth="124.0" text="Location" />
-                              <TableColumn fx:id="contactIdCol" prefWidth="66.0" text="Contact ID" />
+                              <TableColumn fx:id="contactNameCol" prefWidth="66.0" text="Contact Name" />
                               <TableColumn fx:id="startCol" prefWidth="76.0" text="Start Time" />
                               <TableColumn fx:id="endCol" prefWidth="84.0" text="End Time" />
                               <TableColumn fx:id="customerIDCol" minWidth="0.0" prefWidth="75.0" text="Customer ID" />

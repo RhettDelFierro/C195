@@ -48,7 +48,7 @@ public class CentralController implements Initializable {
     private TableColumn<Appointment, String> locationCol;
 
     @FXML
-    private TableColumn<Appointment, Integer> contactIdCol;
+    private TableColumn<Appointment, Integer> contactNameCol;
 
     @FXML
     private TableColumn<Appointment, String> typeCol;
@@ -248,6 +248,11 @@ public class CentralController implements Initializable {
      */
     @FXML
     public void onActionModifyCustomer(ActionEvent event) throws IOException {
+        Customer customerToModify = customersTableView.getSelectionModel().getSelectedItem();
+        if (customerToModify == null) {
+            Errors.showErrorDialog("There is no customer selected.");
+            return;
+        }
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(Utils.class.getResource("/rhettdelfierro/c195/modify-customer.fxml"));
         loader.load();
@@ -278,7 +283,7 @@ public class CentralController implements Initializable {
             typeCol.setCellValueFactory(new PropertyValueFactory<>("type"));
             descriptionCol.setCellValueFactory(new PropertyValueFactory<>("description"));
             locationCol.setCellValueFactory(new PropertyValueFactory<>("location"));
-            contactIdCol.setCellValueFactory(new PropertyValueFactory<>("contactId"));
+            contactNameCol.setCellValueFactory(new PropertyValueFactory<>("contactName"));
             startCol.setCellValueFactory(new PropertyValueFactory<>("start"));
             endCol.setCellValueFactory(new PropertyValueFactory<>("end"));
             customerIDCol.setCellValueFactory(new PropertyValueFactory<>("customerId"));

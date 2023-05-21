@@ -43,7 +43,10 @@ public class ListManagement {
             ObservableList<Appointment> appointments = AppointmentStore.selectByCustomerId(customer.getCustomerId());
             customer.setAppointments(appointments);
         }
-
+        for (Appointment appointment: appointments) {
+            Contact contact = ContactStore.selectContactById(appointment.getContactId());
+            appointment.setContactName(contact.getContactName());
+        }
     }
 
     /**
@@ -58,6 +61,18 @@ public class ListManagement {
         divisions = DivisionStore.fetchAll();
         contacts = ContactStore.fetchAll();
         users = UserStore.fetchAll();
+        for (Country country : countries) {
+            ObservableList<Division> divisions = DivisionStore.selectById(country.getCountryId());
+            country.setDivisions(divisions);
+        }
+        for (Customer customer : customers) {
+            ObservableList<Appointment> appointments = AppointmentStore.selectByCustomerId(customer.getCustomerId());
+            customer.setAppointments(appointments);
+        }
+        for (Appointment appointment: appointments) {
+            Contact contact = ContactStore.selectContactById(appointment.getContactId());
+            appointment.setContactName(contact.getContactName());
+        }
     }
 
     /**
@@ -237,8 +252,6 @@ public class ListManagement {
                 DateTime.isTimeBetweenTwoLocalTimes(appointment.getEnd(), a.getStart(), a.getEnd()));
         ObservableList<Appointment> filteredList = appointments.filtered(predicate);
         if (filteredList.size() > 0) {
-            System.out.print("Customer clashes with " + appointment.getCustomerId());
-            filteredList.iterator().forEachRemaining(a -> System.out.println(a.getCustomerId()));
             Errors.showErrorDialog("Appointment clashes with another appointment. Please choose another time.");
             return;
         }
