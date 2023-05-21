@@ -54,6 +54,30 @@ public class AddAppointmentController implements Initializable {
     ObservableList<String> hours = FXCollections.observableArrayList();
     ObservableList<String> minutes = FXCollections.observableArrayList();
 
+    @FXML
+    void onActionAddAppointment(ActionEvent event) throws IOException {
+
+    }
+    @FXML
+    void onActionModifyAppointment(ActionEvent event) throws IOException {
+
+    }
+    @FXML
+    void onActionDeleteAppointment(ActionEvent event) throws IOException {
+
+    }
+    @FXML
+    void onActionAddCustomer(ActionEvent event) throws IOException {
+
+    }
+    @FXML
+    void onActionModifyCustomer(ActionEvent event) throws IOException {
+
+    }
+    @FXML
+    void onActionDeleteCustomer(ActionEvent event) throws IOException {
+
+    }
     /**
      * Action event handler for clicking the Save Button. This will update and save the appointment to the Database
      * and reroute the user to the main screen.

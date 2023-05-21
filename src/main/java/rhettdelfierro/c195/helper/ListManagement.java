@@ -35,7 +35,7 @@ public class ListManagement {
         users = UserStore.fetchAll();
         currentUser = user;
         for (Country country : countries) {
-            ObservableList<Division> divisions = DivisionStore.selectById(country.getId());
+            ObservableList<Division> divisions = DivisionStore.selectById(country.getCountryId());
             country.setDivisions(divisions);
         }
         for (Customer customer : customers) {

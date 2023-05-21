@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="530.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="rhettdelfierro.c195.controllers.CentralController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="530.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="rhettdelfierro.c195.controllers.CentralController">
     <children>
         <HBox layoutX="13.0" prefHeight="43.0" prefWidth="975.0">
             <children>
@@ -55,11 +55,6 @@
                                                 <Font size="16.0" />
                                             </font>
                                         </Label>
-                                        <TextField fx:id="searchPartTxt" maxWidth="200.0" onAction="#onActionFilterPart" prefHeight="25.0" prefWidth="182.0" promptText="Search by Part ID or Name" GridPane.columnIndex="1">
-                                            <GridPane.margin>
-                                                <Insets />
-                                            </GridPane.margin>
-                                        </TextField>
                                     </children>
                                     <padding>
                                         <Insets right="15.0" top="20.0" />
@@ -86,17 +81,17 @@
                                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                     </rowConstraints>
                                     <children>
-                                        <Button maxWidth="56.0" mnemonicParsing="false" onAction="#onActionAddPart" text="Add" GridPane.columnIndex="3">
+                                        <Button maxWidth="56.0" mnemonicParsing="false" onAction="#onActionAddCustomer" text="Add" GridPane.columnIndex="3">
                                             <GridPane.margin>
                                                 <Insets left="15.0" />
                                             </GridPane.margin>
                                         </Button>
-                                        <Button maxWidth="56.0" mnemonicParsing="false" onAction="#onActionModifyPart" text="Modify" GridPane.columnIndex="4">
+                                        <Button maxWidth="56.0" mnemonicParsing="false" onAction="#onActionModifyCustomer" text="Modify" GridPane.columnIndex="4">
                                             <GridPane.margin>
                                                 <Insets left="15.0" />
                                             </GridPane.margin>
                                         </Button>
-                                        <Button maxWidth="56.0" mnemonicParsing="false" onAction="#onActionDeletePart" text="Delete" GridPane.columnIndex="5">
+                                        <Button maxWidth="56.0" mnemonicParsing="false" onAction="#onActionDeleteCustomer" text="Delete" GridPane.columnIndex="5">
                                             <GridPane.margin>
                                                 <Insets left="15.0" />
                                             </GridPane.margin>
@@ -131,11 +126,6 @@
                                                 <Font size="16.0" />
                                             </font>
                                         </Label>
-                                        <TextField fx:id="searchProductTxt" maxWidth="200.0" onAction="#onActionFilterProduct" prefHeight="25.0" prefWidth="180.0" promptText="Search by Product ID or Name" GridPane.columnIndex="1">
-                                            <GridPane.margin>
-                                                <Insets />
-                                            </GridPane.margin>
-                                        </TextField>
                                     </children>
                                     <padding>
                                         <Insets right="15.0" top="20.0" />
@@ -162,17 +152,17 @@
                                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                     </rowConstraints>
                                     <children>
-                                        <Button maxWidth="56.0" mnemonicParsing="false" onAction="#onActionAddProduct" text="Add" GridPane.columnIndex="3">
+                                        <Button maxWidth="56.0" mnemonicParsing="false" onAction="#onActionAddAppointment" text="Add" GridPane.columnIndex="3">
                                             <GridPane.margin>
                                                 <Insets left="15.0" />
                                             </GridPane.margin>
                                         </Button>
-                                        <Button maxWidth="56.0" mnemonicParsing="false" onAction="#onActionModifyProduct" text="Modify" GridPane.columnIndex="4">
+                                        <Button maxWidth="56.0" mnemonicParsing="false" onAction="#onActionModifyAppointment" text="Modify" GridPane.columnIndex="4">
                                             <GridPane.margin>
                                                 <Insets left="15.0" />
                                             </GridPane.margin>
                                         </Button>
-                                        <Button maxWidth="56.0" mnemonicParsing="false" onAction="#onActionDeleteProduct" text="Delete" GridPane.columnIndex="5">
+                                        <Button maxWidth="56.0" mnemonicParsing="false" onAction="#onActionDeleteAppointment" text="Delete" GridPane.columnIndex="5">
                                             <GridPane.margin>
                                                 <Insets left="15.0" />
                                             </GridPane.margin>

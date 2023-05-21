@@ -35,7 +35,7 @@ public class UserStore {
             users.add(new User(
                     rs.getInt("User_ID"),
                     rs.getString("User_Name"),
-                    rs.getString("****")
+                    "****"
             ));
         }
         return users;

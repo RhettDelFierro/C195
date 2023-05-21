@@ -251,10 +251,10 @@ public class CentralController implements Initializable {
 
 
             customersTableView.setItems(ListManagement.getAllCustomers());
-            customerIdCol.setCellValueFactory(new PropertyValueFactory<>("id"));
-            customerNameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
-            addressCol.setCellValueFactory(new PropertyValueFactory<>("stock"));
-            postalCodeCol.setCellValueFactory(new PropertyValueFactory<>("price"));
+            customerIdCol.setCellValueFactory(new PropertyValueFactory<>("customerId"));
+            customerNameCol.setCellValueFactory(new PropertyValueFactory<>("customerName"));
+            addressCol.setCellValueFactory(new PropertyValueFactory<>("address"));
+            postalCodeCol.setCellValueFactory(new PropertyValueFactory<>("postalCode"));
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
