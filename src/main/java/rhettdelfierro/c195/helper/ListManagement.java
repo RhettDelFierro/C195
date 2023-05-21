@@ -36,12 +36,14 @@ public class ListManagement {
         users = UserStore.fetchAll();
         currentUser = user;
         for (Country country : countries) {
-            ObservableList<Division> divisions = DivisionStore.selectById(country.getCountryId());
+            ObservableList<Division> divisions = DivisionStore.selectByCountryId(country.getCountryId());
             country.setDivisions(divisions);
         }
         for (Customer customer : customers) {
             ObservableList<Appointment> appointments = AppointmentStore.selectByCustomerId(customer.getCustomerId());
             customer.setAppointments(appointments);
+            Division division = DivisionStore.selectById(customer.getDivisionId());
+            customer.setDivisionName(division.getDivision());
         }
         for (Appointment appointment: appointments) {
             Contact contact = ContactStore.selectContactById(appointment.getContactId());
@@ -62,12 +64,14 @@ public class ListManagement {
         contacts = ContactStore.fetchAll();
         users = UserStore.fetchAll();
         for (Country country : countries) {
-            ObservableList<Division> divisions = DivisionStore.selectById(country.getCountryId());
+            ObservableList<Division> divisions = DivisionStore.selectByCountryId(country.getCountryId());
             country.setDivisions(divisions);
         }
         for (Customer customer : customers) {
             ObservableList<Appointment> appointments = AppointmentStore.selectByCustomerId(customer.getCustomerId());
             customer.setAppointments(appointments);
+            Division division = DivisionStore.selectById(customer.getDivisionId());
+            customer.setDivisionName(division.getDivision());
         }
         for (Appointment appointment: appointments) {
             Contact contact = ContactStore.selectContactById(appointment.getContactId());

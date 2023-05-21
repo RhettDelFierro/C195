@@ -294,7 +294,7 @@ public class CentralController implements Initializable {
             customerNameCol.setCellValueFactory(new PropertyValueFactory<>("customerName"));
             addressCol.setCellValueFactory(new PropertyValueFactory<>("address"));
             phoneCol.setCellValueFactory(new PropertyValueFactory<>("phone"));
-            divisionCol.setCellValueFactory(new PropertyValueFactory<>("divisionId"));
+            divisionCol.setCellValueFactory(new PropertyValueFactory<>("divisionName"));
             postalCodeCol.setCellValueFactory(new PropertyValueFactory<>("postalCode"));
         } catch (SQLException e) {
             throw new RuntimeException(e);

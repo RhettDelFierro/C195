@@ -12,6 +12,7 @@ public class Customer {
     private String postalCode;
     private String phone;
     private int divisionId;
+    private String divisionName;
 
     public Customer(int customerId, String customerName, String address, String postalCode, String phone, int divisionId) {
         this.customerId = customerId;
@@ -190,5 +191,21 @@ public class Customer {
     @Override
     public String toString() {
         return customerName;
+    }
+
+    /**
+     * get division name
+     * @return division name
+     */
+    public String getDivisionName() {
+        return divisionName;
+    }
+
+    /**
+     * set division name
+     * @param divisionName division name
+     */
+    public void setDivisionName(String divisionName) {
+        this.divisionName = divisionName;
     }
 }

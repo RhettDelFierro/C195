@@ -22,7 +22,7 @@ public class DivisionStore {
         }
         return divisions;
     }
-    public static ObservableList<Division> selectById(int countryId) throws SQLException {
+    public static ObservableList<Division> selectByCountryId(int countryId) throws SQLException {
         String sql = "SELECT * FROM FIRST_LEVEL_DIVISIONS WHERE COUNTRY_ID = ?";
         PreparedStatement ps = JDBC.connection.prepareStatement(sql);
         ps.setInt(1, countryId);
@@ -36,5 +36,20 @@ public class DivisionStore {
             ));
         }
         return divisions;
+    }
+
+    public static Division selectById(int divisionId) throws SQLException {
+        String sql = "SELECT * FROM FIRST_LEVEL_DIVISIONS WHERE DIVISION_ID = ?";
+        PreparedStatement ps = JDBC.connection.prepareStatement(sql);
+        ps.setInt(1, divisionId);
+        ResultSet rs = ps.executeQuery();
+        if (rs.next()) {
+            return new Division(
+                    rs.getInt("Division_ID"),
+                    rs.getString("Division"),
+                    rs.getInt("Country_ID")
+            );
+        }
+        return null;
     }
 }
