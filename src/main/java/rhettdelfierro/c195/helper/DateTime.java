@@ -44,6 +44,6 @@ public class DateTime {
         ZonedDateTime localZonedDateTime = localDateTime.atZone(ZoneId.systemDefault());
         ZonedDateTime localStartZonedDateTime = localStartDateTime.atZone(ZoneId.systemDefault());
         ZonedDateTime localEndZonedDateTime = localEndDateTime.atZone(ZoneId.systemDefault());
-        return localZonedDateTime.isAfter(localStartZonedDateTime) && localZonedDateTime.isBefore(localEndZonedDateTime);
+        return localZonedDateTime.isEqual(localStartZonedDateTime) || (localZonedDateTime.isAfter(localStartZonedDateTime) && localZonedDateTime.isBefore(localEndZonedDateTime));
     }
 }

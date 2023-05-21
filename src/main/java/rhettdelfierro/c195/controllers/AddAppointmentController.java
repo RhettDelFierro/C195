@@ -1,9 +1,12 @@
 package rhettdelfierro.c195.controllers;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import rhettdelfierro.c195.helper.Errors;
 import rhettdelfierro.c195.helper.ListManagement;
@@ -16,7 +19,6 @@ import rhettdelfierro.c195.models.User;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
-import java.time.LocalTime;
 import java.util.ResourceBundle;
 
 public class AddAppointmentController implements Initializable {
@@ -30,18 +32,27 @@ public class AddAppointmentController implements Initializable {
     @FXML
     private TextField locationTxt;
     @FXML
-    private ComboBox<Contact> contactCombo;
-    @FXML
     private TextField typeTxt;
     @FXML
-    private TextField startTxt;
-    @FXML
-    private TextField endTxt;
+    private ComboBox<Contact> contactCombo;
     @FXML
     private ComboBox<Customer> customerCombo;
     @FXML
     private ComboBox<User> userCombo;
-
+    @FXML
+    private DatePicker startDatePicker;
+    @FXML
+    private ComboBox<String> startHourCombo;
+    @FXML
+    private ComboBox<String> startMinuteCombo;
+    @FXML
+    private DatePicker endDatePicker;
+    @FXML
+    private ComboBox<String> endHourCombo;
+    @FXML
+    private ComboBox<String> endMinuteCombo;
+    ObservableList<String> hours = FXCollections.observableArrayList();
+    ObservableList<String> minutes = FXCollections.observableArrayList();
 
     /**
      * Action event handler for clicking the Save Button. This will update and save the appointment to the Database
@@ -52,7 +63,21 @@ public class AddAppointmentController implements Initializable {
      */
     @FXML
     void onActionSaveAppointment(ActionEvent event) throws SQLException, IOException {
-//        int id = Integer.parseInt(appointmentIdTxt.getText());
+        if (titleTxt.getText().isEmpty() || descriptionTxt.getText().isEmpty() || locationTxt.getText().isEmpty() ||
+                typeTxt.getText().isEmpty()) {
+            Errors.showErrorDialog("All text fields must be filled out.");
+            return;
+        }
+        if (startDatePicker.getValue() == null || endDatePicker.getValue() == null) {
+            Errors.showErrorDialog("All date fields must be filled out.");
+            return;
+        }
+        if (startHourCombo.getSelectionModel().isEmpty() || startMinuteCombo.getSelectionModel().isEmpty() ||
+                endHourCombo.getSelectionModel().isEmpty() || endMinuteCombo.getSelectionModel().isEmpty()) {
+            Errors.showErrorDialog("All time fields must be filled out.");
+            return;
+        }
+
         String title = titleTxt.getText();
         String description = descriptionTxt.getText();
         String location = locationTxt.getText();
@@ -60,20 +85,12 @@ public class AddAppointmentController implements Initializable {
         String type = typeTxt.getText();
         Customer customer = customerCombo.getSelectionModel().getSelectedItem();
         User user = userCombo.getSelectionModel().getSelectedItem();
-
-        if (titleTxt.getText().isEmpty() || descriptionTxt.getText().isEmpty() || locationTxt.getText().isEmpty() ||
-                typeTxt.getText().isEmpty() || startTxt.getText().isEmpty() || endTxt.getText().isEmpty()) {
-            Errors.showErrorDialog("All text fields must be filled out.");
-            return;
-        }
-
-        if (contact == null || customer == null || user == null) {
-            Errors.showErrorDialog("All combo boxes must have a selection.");
-            return;
-        }
-
         // timestamps:
-        Appointment appointment = new Appointment(title, description, location, type, startTxt.getText(), endTxt.getText(), customer.getCustomerId(), user.getUserId(), contact.getContactId());
+        String start = startDatePicker.getValue() + " " + startHourCombo.getSelectionModel().getSelectedItem() + ":" +
+                startMinuteCombo.getSelectionModel().getSelectedItem() + ":00";
+        String end = endDatePicker.getValue() + " " + endHourCombo.getSelectionModel().getSelectedItem() + ":" +
+                endMinuteCombo.getSelectionModel().getSelectedItem() + ":00";
+        Appointment appointment = new Appointment(title, description, location, type, start, end, customer.getCustomerId(), user.getUserId(), contact.getContactId());
         ListManagement.createAppointment(event,appointment);
     }
 
@@ -104,7 +121,13 @@ public class AddAppointmentController implements Initializable {
         customerCombo.setPromptText("Select Customer");
         userCombo.setPromptText("Select User");
 
-        LocalTime start = LocalTime.of(12,0);
-        LocalTime end = LocalTime.of(12, 30);
+        hours.addAll("00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11",
+                "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23");
+        minutes.addAll("00", "15", "30", "45");
+        startHourCombo.setItems(hours);
+        startMinuteCombo.setItems(minutes);
+        endHourCombo.setItems(hours);
+        endMinuteCombo.setItems(minutes);
+
     }
 }

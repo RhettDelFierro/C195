@@ -1,9 +1,12 @@
 package rhettdelfierro.c195.controllers;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import rhettdelfierro.c195.helper.Errors;
 import rhettdelfierro.c195.helper.ListManagement;
@@ -16,6 +19,8 @@ import rhettdelfierro.c195.models.User;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 
 /**
@@ -42,16 +47,25 @@ public class ModifyAppointmentController implements Initializable {
     private TextField typeTxt;
 
     @FXML
-    private TextField startTxt;
-
-    @FXML
-    private TextField endTxt;
-
-    @FXML
     private ComboBox<Customer> customerCombo;
 
     @FXML
     private ComboBox<User> userCombo;
+    @FXML
+    private DatePicker startDatePicker;
+    @FXML
+    private ComboBox<String> startHourCombo;
+    @FXML
+    private ComboBox<String> startMinuteCombo;
+    @FXML
+    private DatePicker endDatePicker;
+    @FXML
+    private ComboBox<String> endHourCombo;
+    @FXML
+    private ComboBox<String> endMinuteCombo;
+
+    ObservableList<String> hours = FXCollections.observableArrayList();
+    ObservableList<String> minutes = FXCollections.observableArrayList();
 
     /**
      * Action event handler for clicking the Save Button. This will update and save the appointment to the Database
@@ -63,8 +77,17 @@ public class ModifyAppointmentController implements Initializable {
     @FXML
     void onActionUpdateAppointment(ActionEvent event) throws SQLException, IOException {
         if (titleTxt.getText().isEmpty() || descriptionTxt.getText().isEmpty() || locationTxt.getText().isEmpty() ||
-                typeTxt.getText().isEmpty() || startTxt.getText().isEmpty() || endTxt.getText().isEmpty()) {
+                typeTxt.getText().isEmpty()) {
             Errors.showErrorDialog("All text fields must be filled out.");
+            return;
+        }
+        if (startDatePicker.getValue() == null || endDatePicker.getValue() == null) {
+            Errors.showErrorDialog("All date fields must be filled out.");
+            return;
+        }
+        if (startHourCombo.getSelectionModel().isEmpty() || startMinuteCombo.getSelectionModel().isEmpty() ||
+                endHourCombo.getSelectionModel().isEmpty() || endMinuteCombo.getSelectionModel().isEmpty()) {
+            Errors.showErrorDialog("All time fields must be filled out.");
             return;
         }
 
@@ -77,8 +100,12 @@ public class ModifyAppointmentController implements Initializable {
         Customer customer = customerCombo.getSelectionModel().getSelectedItem();
         User user = userCombo.getSelectionModel().getSelectedItem();
         // timestamps:
-
-        ListManagement.updateAppointment(event, newPart);
+        String start = startDatePicker.getValue() + " " + startHourCombo.getSelectionModel().getSelectedItem() + ":" +
+                startMinuteCombo.getSelectionModel().getSelectedItem() + ":00";
+        String end = endDatePicker.getValue() + " " + endHourCombo.getSelectionModel().getSelectedItem() + ":" +
+                endMinuteCombo.getSelectionModel().getSelectedItem() + ":00";
+        Appointment appointment = new Appointment(id, title, description, location, type, start, end, customer.getCustomerId(), user.getUserId(), contact.getContactId());
+        ListManagement.updateAppointment(event, appointment);
     }
 
     /**
@@ -97,8 +124,17 @@ public class ModifyAppointmentController implements Initializable {
         typeTxt.setText(appointment.getType());
         contactCombo.setValue(contact);
         customerCombo.setValue(customer);
-        userCombo.setValue(user);
-        // timestamps:
+        userCombo.setValue(user);;
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime localDateTimeStart = LocalDateTime.parse(appointment.getStart(), formatter);
+        LocalDateTime localDateTimeEnd = LocalDateTime.parse(appointment.getEnd(), formatter);
+        startDatePicker.setValue(localDateTimeStart.toLocalDate());
+        startHourCombo.setValue(String.valueOf(localDateTimeStart.getHour()));
+        startMinuteCombo.setValue(String.valueOf(localDateTimeStart.getMinute()));
+        endDatePicker.setValue(localDateTimeEnd.toLocalDate());
+        endHourCombo.setValue(String.valueOf(localDateTimeEnd.getHour()));
+        endMinuteCombo.setValue(String.valueOf(localDateTimeEnd.getMinute()));
     }
 
     /**
@@ -123,5 +159,13 @@ public class ModifyAppointmentController implements Initializable {
         contactCombo.setItems(ListManagement.getAllContacts());
         customerCombo.setItems(ListManagement.getAllCustomers());
         userCombo.setItems(ListManagement.getAllUsers());
+
+        hours.addAll("00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11",
+                "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23");
+        minutes.addAll("00", "15", "30", "45");
+        startHourCombo.setItems(hours);
+        startMinuteCombo.setItems(minutes);
+        endHourCombo.setItems(hours);
+        endMinuteCombo.setItems(minutes);
     }
 }
