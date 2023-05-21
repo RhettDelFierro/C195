@@ -37,7 +37,7 @@ public class Country {
      *
      * @return the countryId
      */
-    public int getId() {
+    public int getCountryId() {
         return countryId;
     }
 
@@ -46,5 +46,14 @@ public class Country {
      */
     public void setDivisions(ObservableList<Division> divisions) {
         this.divisions = divisions;
+    }
+
+    /**
+     * Returns a string representation of the country.
+     * @return the country
+     */
+    @Override
+    public String toString() {
+        return country;
     }
 }

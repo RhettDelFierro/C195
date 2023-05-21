@@ -16,7 +16,8 @@ public class DivisionStore {
         while (rs.next()) {
             divisions.add(new Division(
                     rs.getInt("Division_ID"),
-                    rs.getString("Division")
+                    rs.getString("Division"),
+                    rs.getInt("Country_ID")
             ));
         }
         return divisions;
@@ -30,7 +31,8 @@ public class DivisionStore {
         while (rs.next()) {
             divisions.add(new Division(
                     rs.getInt("Division_ID"),
-                    rs.getString("Division")
+                    rs.getString("Division"),
+                    rs.getInt("Country_ID")
             ));
         }
         return divisions;

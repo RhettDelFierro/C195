@@ -95,6 +95,21 @@ public class ListManagement {
     }
 
     /**
+     * Getter for divisions by countryId.
+     * @param countryId the country id
+     * @return the divisions
+     */
+    public static ObservableList<Division> getDivisionsByCountryId(int countryId) {
+        ObservableList<Division> divisionsByCountryId = FXCollections.observableArrayList();
+        for (Division division : divisions) {
+            if (division.getCountryId() == countryId) {
+                divisionsByCountryId.add(division);
+            }
+        }
+        return divisionsByCountryId;
+    }
+
+    /**
      * Getter for users.
      *
      * @return the users
@@ -226,6 +241,42 @@ public class ListManagement {
         }
         fetchAll();
         Utils.changeScene(event, "central-view");
+    }
+
+    public static void createCustomer(ActionEvent event, Customer customer) throws SQLException, IOException {
+        int rowsAffected = CustomerStore.insert(customer);
+        if (rowsAffected == 0) {
+            Errors.showErrorDialog("An error has occurred trying to save to the database.");
+        }
+        fetchAll();
+        Utils.changeScene(event, "central-view");
+    }
+
+    public static void updateCustomer(ActionEvent event, Customer customer) throws SQLException, IOException {
+        int rowsAffected = CustomerStore.update(customer);
+        if (rowsAffected == 0) {
+            Errors.showErrorDialog("An error has occurred trying to save to the database.");
+        }
+        fetchAll();
+        Utils.changeScene(event, "central-view");
+    }
+
+    public static Country getCountryById(int countryId) {
+        for (Country country : countries) {
+            if (country.getCountryId() == countryId) {
+                return country;
+            }
+        }
+        return null;
+    }
+
+    public static Division getDivisionById(int divisionId) {
+        for (Division division : divisions) {
+            if (division.getDivisionId() == divisionId) {
+                return division;
+            }
+        }
+        return null;
     }
 
     public static Appointment getAppointmentById(int appointmentId) {

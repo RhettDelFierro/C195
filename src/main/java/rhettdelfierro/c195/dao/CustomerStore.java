@@ -9,27 +9,27 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class CustomerStore {
-    public static int insert(String name, String address, String postalCode, String phone, int divisionId) throws SQLException {
+    public static int insert(Customer customer) throws SQLException {
         String sql = "INSERT INTO CUSTOMERS (Customer_Name, Address, Postal_Code, Phone, Division_ID) VALUES (?, ?, ?, ?, ?)";
         PreparedStatement ps = JDBC.connection.prepareStatement(sql);
-        ps.setString(1, name);
-        ps.setString(2, address);
-        ps.setString(3, postalCode);
-        ps.setString(4, phone);
-        ps.setInt(5, divisionId);
+        ps.setString(1, customer.getCustomerName());
+        ps.setString(2, customer.getAddress());
+        ps.setString(3, customer.getPostalCode());
+        ps.setString(4, customer.getPhone());
+        ps.setInt(5, customer.getDivisionId());
         int rowsAffected = ps.executeUpdate();
         return rowsAffected;
     }
 
-    public static int update(int customerId, String name, String address, String postalCode, String phone, int divisionId) throws SQLException {
+    public static int update(Customer customer) throws SQLException {
         String sql = "UPDATE CUSTOMERS SET Customer_Name = ?, Address = ?, Postal_Code = ?, Phone = ?, Division_ID = ? WHERE Customer_ID = ?";
         PreparedStatement ps = JDBC.connection.prepareStatement(sql);
-        ps.setString(1, name);
-        ps.setString(2, address);
-        ps.setString(3, postalCode);
-        ps.setString(4, phone);
-        ps.setInt(5, divisionId);
-        ps.setInt(6, customerId);
+        ps.setString(1, customer.getCustomerName());
+        ps.setString(2, customer.getAddress());
+        ps.setString(3, customer.getPostalCode());
+        ps.setString(4, customer.getPhone());
+        ps.setInt(5, customer.getDivisionId());
+        ps.setInt(6, customer.getCustomerId());
         int rowsAffected = ps.executeUpdate();
         return rowsAffected;
     }

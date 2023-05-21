@@ -22,6 +22,14 @@ public class Customer {
         this.divisionId = divisionId;
     }
 
+    public Customer(String customerName, String address, String postalCode, String phone, int divisionId) {
+        this.customerName = customerName;
+        this.address = address;
+        this.postalCode = postalCode;
+        this.phone = phone;
+        this.divisionId = divisionId;
+    }
+
     /**
      * Customer ID getter
      *
