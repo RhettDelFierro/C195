@@ -8,7 +8,7 @@
 
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            fx:controller="rhettdelfierro.c195.ModifyCustomer"
-            prefHeight="400.0" prefWidth="600.0">
+            fx:controller="rhettdelfierro.c195.controllers.ModifyCustomerController"
+            prefHeight="530.0" prefWidth="750.0">
 
 </AnchorPane>

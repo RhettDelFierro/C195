@@ -11,10 +11,7 @@ import javafx.scene.control.TextField;
 import rhettdelfierro.c195.helper.Errors;
 import rhettdelfierro.c195.helper.ListManagement;
 import rhettdelfierro.c195.helper.Utils;
-import rhettdelfierro.c195.models.Appointment;
-import rhettdelfierro.c195.models.Contact;
-import rhettdelfierro.c195.models.Customer;
-import rhettdelfierro.c195.models.User;
+import rhettdelfierro.c195.models.*;
 
 import java.io.IOException;
 import java.net.URL;
@@ -28,17 +25,14 @@ public class AddAppointmentController implements Initializable {
     @FXML
     private TextField titleTxt;
     @FXML
+    private TextField typeTxt;
+    @FXML
     private TextField descriptionTxt;
     @FXML
     private TextField locationTxt;
-    @FXML
-    private TextField typeTxt;
+
     @FXML
     private ComboBox<Contact> contactCombo;
-    @FXML
-    private ComboBox<Customer> customerCombo;
-    @FXML
-    private ComboBox<User> userCombo;
     @FXML
     private DatePicker startDatePicker;
     @FXML
@@ -51,33 +45,14 @@ public class AddAppointmentController implements Initializable {
     private ComboBox<String> endHourCombo;
     @FXML
     private ComboBox<String> endMinuteCombo;
+    @FXML
+    private ComboBox<Customer> customerCombo;
+    @FXML
+    private ComboBox<User> userCombo;
+
     ObservableList<String> hours = FXCollections.observableArrayList();
     ObservableList<String> minutes = FXCollections.observableArrayList();
 
-    @FXML
-    void onActionAddAppointment(ActionEvent event) throws IOException {
-
-    }
-    @FXML
-    void onActionModifyAppointment(ActionEvent event) throws IOException {
-
-    }
-    @FXML
-    void onActionDeleteAppointment(ActionEvent event) throws IOException {
-
-    }
-    @FXML
-    void onActionAddCustomer(ActionEvent event) throws IOException {
-
-    }
-    @FXML
-    void onActionModifyCustomer(ActionEvent event) throws IOException {
-
-    }
-    @FXML
-    void onActionDeleteCustomer(ActionEvent event) throws IOException {
-
-    }
     /**
      * Action event handler for clicking the Save Button. This will update and save the appointment to the Database
      * and reroute the user to the main screen.
@@ -125,7 +100,7 @@ public class AddAppointmentController implements Initializable {
      * @throws IOException an IOException that bubbles up.
      */
     @FXML
-    void onActionCancelUpdatePart(ActionEvent event) throws IOException {
+    void onActionCancel(ActionEvent event) throws IOException {
         Utils.changeScene(event, "central-view");
     }
 
@@ -138,20 +113,26 @@ public class AddAppointmentController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        contactCombo.setItems(ListManagement.getAllContacts());
-        customerCombo.setItems(ListManagement.getAllCustomers());
-        userCombo.setItems(ListManagement.getAllUsers());
-        contactCombo.setPromptText("Select Contact");
-        customerCombo.setPromptText("Select Customer");
-        userCombo.setPromptText("Select User");
+        try {
+            ListManagement.fetchAll();
+            hours.addAll("00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11",
+                    "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23");
+            minutes.addAll("00", "15", "30", "45");
+            startHourCombo.setItems(hours);
+            startMinuteCombo.setItems(minutes);
+            endHourCombo.setItems(hours);
+            endMinuteCombo.setItems(minutes);
 
-        hours.addAll("00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11",
-                "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23");
-        minutes.addAll("00", "15", "30", "45");
-        startHourCombo.setItems(hours);
-        startMinuteCombo.setItems(minutes);
-        endHourCombo.setItems(hours);
-        endMinuteCombo.setItems(minutes);
+            contactCombo.setItems(ListManagement.getAllContacts());
+            customerCombo.setItems(ListManagement.getAllCustomers());
+            userCombo.setItems(ListManagement.getAllUsers());
+            contactCombo.setPromptText("Select Contact");
+            customerCombo.setPromptText("Select Customer");
+            userCombo.setPromptText("Select User");
 
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
