@@ -3,8 +3,10 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -14,7 +16,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="530.0" prefWidth="1500.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="rhettdelfierro.c195.controllers.CentralController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="530.0" prefWidth="1500.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="rhettdelfierro.c195.controllers.CentralController">
     <children>
         <HBox layoutX="13.0" prefHeight="43.0" prefWidth="975.0">
             <children>
@@ -39,8 +41,8 @@
                             <children>
                                 <GridPane>
                                     <columnConstraints>
-                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="612.0" minWidth="10.0" prefWidth="519.0" />
-                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="297.0" minWidth="10.0" prefWidth="297.0" />
+                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="612.0" minWidth="10.0" prefWidth="384.0" />
+                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="432.0" minWidth="10.0" prefWidth="432.0" />
                                     </columnConstraints>
                                     <rowConstraints>
                                         <RowConstraints maxHeight="45.0" minHeight="10.0" prefHeight="31.0" vgrow="SOMETIMES" />
@@ -54,6 +56,18 @@
                                                 <Font size="16.0" />
                                             </font>
                                         </Label>
+                              <HBox prefHeight="100.0" prefWidth="200.0" spacing="20.0" GridPane.columnIndex="1">
+                                 <children>
+                                    <Label text="Filter appointments by:" />
+                                    <RadioButton fx:id="allAppointmentsRadio" mnemonicParsing="false" onAction="#onActionAllAppointmentsRBtn" selected="true" text="All">
+                                       <toggleGroup>
+                                          <ToggleGroup fx:id="appointmentFilter" />
+                                       </toggleGroup>
+                                    </RadioButton>
+                                    <RadioButton fx:id="monthlyAppointmentsRadio" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#onActionMonthlyAppointmentsRBtn" text="Current Month" toggleGroup="$appointmentFilter" />
+                                    <RadioButton fx:id="weeklyAppointmentsRadio" layoutX="102.0" layoutY="10.0" mnemonicParsing="false" onAction="#onActionWeeklyAppointmentsRBtn" text="Current Week" toggleGroup="$appointmentFilter" />
+                                 </children>
+                              </HBox>
                                     </children>
                                     <padding>
                                         <Insets right="15.0" top="20.0" />
@@ -159,7 +173,7 @@
                                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                     </rowConstraints>
                                     <children>
-                                        <Button maxWidth="56.0" mnemonicParsing="false" onAction="#onActionAddAppointment" text="Add" GridPane.columnIndex="3">
+                                        <Button maxWidth="56.0" mnemonicParsing="false" onAction="#onActionAddCustomer" text="Add" GridPane.columnIndex="3">
                                             <GridPane.margin>
                                                 <Insets left="15.0" />
                                             </GridPane.margin>

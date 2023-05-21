@@ -88,6 +88,14 @@ public class ListManagement {
     }
 
     /**
+     * Getter for divisions.
+     * @return the divisions
+     */
+    public static ObservableList<Division> getAllDivisions() {
+        return divisions;
+    }
+
+    /**
      * Getter for contacts.
      *
      * @return the contacts
@@ -95,6 +103,7 @@ public class ListManagement {
     public static ObservableList<Contact> getAllContacts() {
         return contacts;
     }
+
 
     /**
      * Getter for divisions by countryId.

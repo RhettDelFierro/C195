@@ -88,12 +88,32 @@ public class CentralController implements Initializable {
 
     @FXML
     private TableView<Customer> customersTableView;
-
+    @FXML
+    private RadioButton allAppointmentsRadio;
+    @FXML
+    private RadioButton monthlyAppointmentsRadio;
+    @FXML
+    private RadioButton weeklyAppointmentsRadio;
     @FXML
     private TextField searchAppointmentTxt;
 
     @FXML
     private TextField searchCustomerTitleTxt;
+
+    @FXML
+    void onActionAllAppointmentsRBtn(ActionEvent event) {
+        appointmentTableView.setItems(ListManagement.getAllAppointments());
+    }
+
+    @FXML
+    void onActionMonthlyAppointmentsRBtn(ActionEvent event) throws SQLException {
+        appointmentTableView.setItems(ListManagement.searchAppointmentsByCurrentTime("monthly"));
+    }
+
+    @FXML
+    void onActionWeeklyAppointmentsRBtn(ActionEvent event) throws SQLException {
+        appointmentTableView.setItems(ListManagement.searchAppointmentsByCurrentTime("weekly"));
+    }
 
     /**
      * Helper method to change scenes

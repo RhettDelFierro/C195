@@ -20,7 +20,7 @@ import java.util.ResourceBundle;
 public class AddCustomerController implements Initializable {
 
     @FXML
-    private TextField appointmentIdTxt;
+    private TextField customerIdTxt;
     @FXML
     private TextField nameTxt;
     @FXML
@@ -37,6 +37,15 @@ public class AddCustomerController implements Initializable {
     void onActionCountryCombo(ActionEvent event) {
         Country country = countryCombo.getSelectionModel().getSelectedItem();
         divisionCombo.setItems(ListManagement.getDivisionsByCountryId(country.getCountryId()));
+    }
+
+    @FXML
+    void onActionDivisionCombo(ActionEvent event) {
+        Division division = divisionCombo.getSelectionModel().getSelectedItem();
+        Country country = countryCombo.getSelectionModel().getSelectedItem();
+        if (country == null || country.getCountryId() != division.getCountryId()) {
+            countryCombo.setValue(ListManagement.getCountryById(division.getCountryId()));
+        }
     }
 
     @FXML
@@ -71,12 +80,15 @@ public class AddCustomerController implements Initializable {
      * @throws IOException an IOException that bubbles up.
      */
     @FXML
-    void onActionCancelUpdatePart(ActionEvent event) throws IOException {
+    void onActionCancel(ActionEvent event) throws IOException {
         Utils.changeScene(event, "central-view");
     }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         countryCombo.setItems(ListManagement.getAllCountries());
+        countryCombo.setPromptText("Select Country");
+        divisionCombo.setItems(ListManagement.getAllDivisions());
+        divisionCombo.setPromptText("Select State/Province");
     }
 }
