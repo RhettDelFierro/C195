@@ -10,11 +10,13 @@ import rhettdelfierro.c195.models.*;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.function.Predicate;
 
 public class ListManagement {
     public static ObservableList<Appointment> appointments = FXCollections.observableArrayList();
     public static ObservableList<Customer> customers = FXCollections.observableArrayList();
     public static ObservableList<Country> countries = FXCollections.observableArrayList();
+    public static ObservableList<Division> divisions = FXCollections.observableArrayList();
     public static ObservableList<Contact> contacts = FXCollections.observableArrayList();
     public static ObservableList<User> users = FXCollections.observableArrayList();
     public static User currentUser = null;
@@ -29,8 +31,18 @@ public class ListManagement {
         customers = CustomerStore.fetchAll();
         countries = CountryStore.fetchAll();
         contacts = ContactStore.fetchAll();
+        divisions = DivisionStore.fetchAll();
         users = UserStore.fetchAll();
         currentUser = user;
+        for (Country country : countries) {
+            ObservableList<Division> divisions = DivisionStore.selectById(country.getId());
+            country.setDivisions(divisions);
+        }
+        for (Customer customer : customers) {
+            ObservableList<Appointment> appointments = AppointmentStore.selectByCustomerId(customer.getCustomerId());
+            customer.setAppointments(appointments);
+        }
+
     }
 
     /**
@@ -41,6 +53,7 @@ public class ListManagement {
         appointments = AppointmentStore.fetchAll();
         customers = CustomerStore.fetchAll();
         countries = CountryStore.fetchAll();
+        divisions = DivisionStore.fetchAll();
         contacts = ContactStore.fetchAll();
         users = UserStore.fetchAll();
     }
@@ -134,7 +147,7 @@ public class ListManagement {
             return;
         }
         CustomerStore.delete(customer.getCustomerId());
-        customers = CustomerStore.fetchAll();
+        fetchAll();
     }
 
     /**
@@ -151,7 +164,7 @@ public class ListManagement {
             return;
         }
         AppointmentStore.delete(appointment.getAppointmentId());
-        appointments = AppointmentStore.fetchAll();
+        fetchAll();
     }
 
     /**
@@ -175,20 +188,53 @@ public class ListManagement {
     public static void createAppointment(ActionEvent event, Appointment appointment) throws SQLException, IOException {
         // remember you need to check if the appointment clashes with another appointment.
         // if it does, then you need to throw an error.
+        if (DateTime.isBeforeCurrentTime(appointment.getStart())) {
+            Errors.showErrorDialog("Appointment cannot be in the past.");
+            return;
+        }
+        Predicate<Appointment> predicate = a -> DateTime.isTimeBetweenTwoLocalTimes(appointment.getStart(),a.getStart(),a.getEnd());
+        ObservableList<Appointment> filteredList = appointments.filtered(predicate);
+        if (filteredList.size() > 0) {
+            Errors.showErrorDialog("Appointment clashes with another appointment. Please choose another time.");
+            return;
+        }
         int rowsAffected = AppointmentStore.insert(appointment);
         if (rowsAffected == 0) {
-            Errors.showErrorDialog("Appointment clashes with another appointment. Please choose another time.");
+            Errors.showErrorDialog("An error has occurred trying to save to the database.");
         }
-        appointments = AppointmentStore.fetchAll();
+        fetchAll();
         Utils.changeScene(event, "central-view");
     }
 
-    public static void updateAppointment(ActionEvent event, int appointmentId, String title, String description, String location, String type, String start, String end, int customerId, int userId, int contactId) throws SQLException, IOException {
+    public static void updateAppointment(ActionEvent event, Appointment appointment) throws SQLException, IOException {
+        if (DateTime.isBeforeCurrentTime(appointment.getStart())) {
+            Errors.showErrorDialog("Appointment cannot be in the past.");
+            return;
+        }
+        Predicate<Appointment> predicate = a -> DateTime.isTimeBetweenTwoLocalTimes(appointment.getStart(),a.getStart(),a.getEnd());
+        ObservableList<Appointment> filteredList = appointments.filtered(predicate);
+        if (filteredList.size() > 0) {
+            Errors.showErrorDialog("Appointment clashes with another appointment. Please choose another time.");
+            return;
+        }
+
         // remember you need to check if the appointment clashes with another appointment.
         // if it does, then you need to throw an error.
-        AppointmentStore.update(appointmentId, title, description, location, type, start, end, customerId, userId, contactId);
-        appointments = AppointmentStore.fetchAll();
+        int rowsAffected = AppointmentStore.update(appointment);
+        if (rowsAffected == 0) {
+            Errors.showErrorDialog("An error has occurred trying to save to the database.");
+        }
+        fetchAll();
         Utils.changeScene(event, "central-view");
+    }
+
+    public static Appointment getAppointmentById(int appointmentId) {
+        for (Appointment appointment : appointments) {
+            if (appointment.getAppointmentId() == appointmentId) {
+                return appointment;
+            }
+        }
+        return null;
     }
 
     public static Contact getContactById(int contactId) {

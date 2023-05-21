@@ -2,6 +2,7 @@ package rhettdelfierro.c195.dao;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import rhettdelfierro.c195.helper.DateTime;
 import rhettdelfierro.c195.models.Appointment;
 
 import java.sql.PreparedStatement;
@@ -25,19 +26,19 @@ public class AppointmentStore {
         return rowsAffected;
     }
 
-    public static int update(int appointmentId, String title, String description, String location, String type, String start, String end, int customerId, int userId, int contactId) throws SQLException {
+    public static int update(Appointment appointment) throws SQLException {
         String sql = "UPDATE APPOINTMENTS SET Title = ?, Description = ?, Location = ?, Type = ?, Start = ?, End = ?, Customer_ID = ?, User_ID = ?, Contact_ID = ? WHERE Appointment_ID = ?";
         PreparedStatement ps = JDBC.connection.prepareStatement(sql);
-        ps.setString(1, title);
-        ps.setString(2, description);
-        ps.setString(3, location);
-        ps.setString(4, type);
-        ps.setString(5, start);
-        ps.setString(6, end);
-        ps.setInt(7, customerId);
-        ps.setInt(8, userId);
-        ps.setInt(9, contactId);
-        ps.setInt(10, appointmentId);
+        ps.setString(1, appointment.getTitle());
+        ps.setString(2, appointment.getDescription());
+        ps.setString(3, appointment.getLocation());
+        ps.setString(4, appointment.getType());
+        ps.setString(5, appointment.getStart());
+        ps.setString(6, appointment.getEnd());
+        ps.setInt(7, appointment.getCustomerId());
+        ps.setInt(8, appointment.getUserId());
+        ps.setInt(9, appointment.getContactId());
+        ps.setInt(10, appointment.getAppointmentId());
         int rowsAffected = ps.executeUpdate();
         return rowsAffected;
     }
@@ -62,8 +63,8 @@ public class AppointmentStore {
                     rs.getString("Description"),
                     rs.getString("Location"),
                     rs.getString("Type"),
-                    rs.getString("Start"),
-                    rs.getString("End"),
+                    DateTime.convertFromUTCToLocal(rs.getString("Start")),
+                    DateTime.convertFromUTCToLocal(rs.getString("End")),
                     rs.getInt("Customer_ID"),
                     rs.getInt("User_ID"),
                     rs.getInt("Contact_ID")
@@ -90,8 +91,8 @@ public class AppointmentStore {
                     rs.getString("Description"),
                     rs.getString("Location"),
                     rs.getString("Type"),
-                    rs.getString("Start"),
-                    rs.getString("End"),
+                    DateTime.convertFromUTCToLocal(rs.getString("Start")),
+                    DateTime.convertFromUTCToLocal(rs.getString("End")),
                     rs.getInt("Customer_ID"),
                     rs.getInt("User_ID"),
                     rs.getInt("Contact_ID")
@@ -111,8 +112,8 @@ public class AppointmentStore {
                     rs.getString("Description"),
                     rs.getString("Location"),
                     rs.getString("Type"),
-                    rs.getString("Start"),
-                    rs.getString("End"),
+                    DateTime.convertFromUTCToLocal(rs.getString("Start")),
+                    DateTime.convertFromUTCToLocal(rs.getString("End")),
                     rs.getInt("Customer_ID"),
                     rs.getInt("User_ID"),
                     rs.getInt("Contact_ID")
@@ -134,8 +135,8 @@ public class AppointmentStore {
                     rs.getString("Description"),
                     rs.getString("Location"),
                     rs.getString("Type"),
-                    rs.getString("Start"),
-                    rs.getString("End"),
+                    DateTime.convertFromUTCToLocal(rs.getString("Start")),
+                    DateTime.convertFromUTCToLocal(rs.getString("End")),
                     rs.getInt("Customer_ID"),
                     rs.getInt("User_ID"),
                     rs.getInt("Contact_ID")

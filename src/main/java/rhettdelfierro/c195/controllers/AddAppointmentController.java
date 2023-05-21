@@ -42,6 +42,7 @@ public class AddAppointmentController implements Initializable {
     @FXML
     private ComboBox<User> userCombo;
 
+
     /**
      * Action event handler for clicking the Save Button. This will update and save the appointment to the Database
      * and reroute the user to the main screen.
@@ -59,11 +60,13 @@ public class AddAppointmentController implements Initializable {
         String type = typeTxt.getText();
         Customer customer = customerCombo.getSelectionModel().getSelectedItem();
         User user = userCombo.getSelectionModel().getSelectedItem();
+
         if (titleTxt.getText().isEmpty() || descriptionTxt.getText().isEmpty() || locationTxt.getText().isEmpty() ||
                 typeTxt.getText().isEmpty() || startTxt.getText().isEmpty() || endTxt.getText().isEmpty()) {
             Errors.showErrorDialog("All text fields must be filled out.");
             return;
         }
+
         if (contact == null || customer == null || user == null) {
             Errors.showErrorDialog("All combo boxes must have a selection.");
             return;

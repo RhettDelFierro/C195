@@ -3,7 +3,6 @@ package rhettdelfierro.c195.dao;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import rhettdelfierro.c195.models.Country;
-import rhettdelfierro.c195.models.Division;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -22,10 +21,6 @@ public class CountryStore {
             ));
         }
 
-        for (Country country : countries) {
-            ObservableList<Division> divisions = DivisionStore.selectById(country.getId());
-            country.setDivisions(divisions);
-        }
         return countries;
     }
 }

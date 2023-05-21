@@ -2,7 +2,6 @@ package rhettdelfierro.c195.dao;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import rhettdelfierro.c195.models.Appointment;
 import rhettdelfierro.c195.models.Customer;
 
 import java.sql.PreparedStatement;
@@ -59,10 +58,6 @@ public class CustomerStore {
             ));
         }
 
-        for (Customer customer : customers) {
-            ObservableList<Appointment> appointments = AppointmentStore.selectByCustomerId(customer.getCustomerId());
-            customer.setAppointments(appointments);
-        }
         return customers;
     }
 

@@ -5,6 +5,7 @@ import javafx.collections.ObservableList;
 
 public class Customer {
     private ObservableList<Appointment> appointments = FXCollections.observableArrayList();
+    private Division division = null;
     private int customerId;
     private String customerName;
     private String address;
@@ -154,6 +155,24 @@ public class Customer {
      */
     public void addAppointment(Appointment appointment) {
         appointments.add(appointment);
+    }
+
+    /**
+     * Returns the division of the customer.
+     *
+     * @return the division
+     */
+    public Division getDivision() {
+        return division;
+    }
+
+    /**
+     * Sets the division of the customer.
+     *
+     * @param division the new division
+     */
+    public void setDivision(Division division) {
+        this.division = division;
     }
 
     /**

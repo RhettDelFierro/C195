@@ -47,7 +47,7 @@ public class CentralController implements Initializable {
     private TableColumn<Appointment, String> locationCol;
 
     @FXML
-    private TableColumn<Appointment, String> contactNameCol;
+    private TableColumn<Appointment, Integer> contactIdCol;
 
     @FXML
     private TableColumn<Appointment, String> typeCol;
@@ -242,10 +242,13 @@ public class CentralController implements Initializable {
             ListManagement.fetchAll();
             appointmentTableView.setItems(ListManagement.getAllAppointments());
 
-            appointmentIdCol.setCellValueFactory(new PropertyValueFactory<>("id"));
-            titleCol.setCellValueFactory(new PropertyValueFactory<>("name"));
-            descriptionCol.setCellValueFactory(new PropertyValueFactory<>("stock"));
-            locationCol.setCellValueFactory(new PropertyValueFactory<>("price"));
+            appointmentIdCol.setCellValueFactory(new PropertyValueFactory<>("appointmentId"));
+            titleCol.setCellValueFactory(new PropertyValueFactory<>("title"));
+            descriptionCol.setCellValueFactory(new PropertyValueFactory<>("description"));
+            locationCol.setCellValueFactory(new PropertyValueFactory<>("location"));
+            contactIdCol.setCellValueFactory(new PropertyValueFactory<>("contactId"));
+            typeCol.setCellValueFactory(new PropertyValueFactory<>("type"));
+
 
             customersTableView.setItems(ListManagement.getAllCustomers());
             customerIdCol.setCellValueFactory(new PropertyValueFactory<>("id"));

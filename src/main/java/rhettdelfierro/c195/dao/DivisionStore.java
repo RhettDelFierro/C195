@@ -8,6 +8,19 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class DivisionStore {
+    public static ObservableList<Division> fetchAll() throws SQLException {
+        String sql = "SELECT * FROM FIRST_LEVEL_DIVISIONS";
+        PreparedStatement ps = JDBC.connection.prepareStatement(sql);
+        ResultSet rs = ps.executeQuery();
+        ObservableList<Division> divisions = javafx.collections.FXCollections.observableArrayList();
+        while (rs.next()) {
+            divisions.add(new Division(
+                    rs.getInt("Division_ID"),
+                    rs.getString("Division")
+            ));
+        }
+        return divisions;
+    }
     public static ObservableList<Division> selectById(int countryId) throws SQLException {
         String sql = "SELECT * FROM FIRST_LEVEL_DIVISIONS WHERE COUNTRY_ID = ?";
         PreparedStatement ps = JDBC.connection.prepareStatement(sql);
