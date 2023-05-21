@@ -145,9 +145,10 @@ public class ModifyAppointmentController implements Initializable {
      * @throws IOException an IOException that bubbles up.
      */
     @FXML
-    void onActionCancelUpdatePart(ActionEvent event) throws IOException {
+    void onActionCancel(ActionEvent event) throws IOException {
         Utils.changeScene(event, "central-view");
     }
+
     /**
      * Initializes this controller class from implementing the Initializable interface.
      * Unused here but required for the interface.

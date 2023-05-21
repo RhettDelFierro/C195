@@ -85,8 +85,8 @@
             <TextField fx:id="phoneTxt" GridPane.columnIndex="2" GridPane.rowIndex="6" />
             <ComboBox fx:id="countryCombo" onAction="#onActionCountryCombo" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="7" />
             <ComboBox fx:id="divisionCombo" onAction="#onActionDivisionCombo" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="8" />
-            <Button mnemonicParsing="false" onAction="#onActionSaveCustomer" text="Button" GridPane.columnIndex="4" GridPane.rowIndex="6" />
-            <Button mnemonicParsing="false" onAction="#onActionCancel" text="Cancel" GridPane.columnIndex="4" GridPane.rowIndex="7" />
+            <Button maxWidth="130.0" mnemonicParsing="false" onAction="#onActionSaveCustomer" text="Add Customer" GridPane.columnIndex="4" GridPane.rowIndex="6" />
+            <Button maxWidth="130.0" mnemonicParsing="false" onAction="#onActionCancel" text="Cancel" GridPane.columnIndex="4" GridPane.rowIndex="7" />
          </children>
       </GridPane>
    </children>

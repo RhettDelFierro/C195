@@ -38,6 +38,7 @@ public class ModifyCustomerController implements Initializable {
         phoneTxt.setText(customer.getPhone());
         postalCodeTxt.setText(customer.getPostalCode());
         Division division = ListManagement.getDivisionById(customer.getDivisionId());
+        divisionCombo.setItems(ListManagement.getDivisionsByCountryId(division.getCountryId()));
         countryCombo.setValue(ListManagement.getCountryById(division.getCountryId()));
         divisionCombo.setValue(ListManagement.getDivisionById(customer.getDivisionId()));
     }
@@ -88,13 +89,13 @@ public class ModifyCustomerController implements Initializable {
         String phone = phoneTxt.getText();
         String postalCode = postalCodeTxt.getText();
         Division division = divisionCombo.getSelectionModel().getSelectedItem();
-//        Country country = countryCombo.getSelectionModel().getSelectedItem();
         Customer customer = new Customer(name, address, postalCode, phone, division.getDivisionId());
-        ListManagement.createCustomer(event, customer);
+        ListManagement.updateCustomer(event, customer);
     }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+        countryCombo.setItems(ListManagement.getAllCountries());
+        divisionCombo.setItems(ListManagement.getAllDivisions());
     }
 }

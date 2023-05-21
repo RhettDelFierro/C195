@@ -230,7 +230,7 @@ public class CentralController implements Initializable {
 
         stage = (Stage)((Button)event.getSource()).getScene().getWindow();
         Parent scene = loader.getRoot();
-        stage.setScene(new Scene(scene, 1500, 530));
+        stage.setScene(new Scene(scene, 750, 530));
         stage.showAndWait();
     }
 
@@ -256,7 +256,7 @@ public class CentralController implements Initializable {
 
         stage = (Stage)((Button)event.getSource()).getScene().getWindow();
         Parent scene = loader.getRoot();
-        stage.setScene(new Scene(scene, 1500, 530));
+        stage.setScene(new Scene(scene, 750, 530));
         stage.showAndWait();
     }
 
