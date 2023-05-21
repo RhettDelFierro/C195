@@ -57,7 +57,6 @@ public class AppointmentStore {
         ResultSet rs = ps.executeQuery();
         ObservableList<Appointment> appointments = FXCollections.observableArrayList();
         while (rs.next()) {
-            System.out.println(rs.getString("Contact_ID"));
             appointments.add(new Appointment(
                     rs.getInt("Appointment_ID"),
                     rs.getString("Title"),

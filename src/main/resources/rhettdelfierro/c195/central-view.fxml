@@ -5,7 +5,6 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -15,7 +14,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="530.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="rhettdelfierro.c195.controllers.CentralController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="530.0" prefWidth="1500.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="rhettdelfierro.c195.controllers.CentralController">
     <children>
         <HBox layoutX="13.0" prefHeight="43.0" prefWidth="975.0">
             <children>
@@ -29,25 +28,25 @@
                 </Label>
             </children>
         </HBox>
-        <HBox layoutX="13.0" layoutY="60.0" prefHeight="402.0" prefWidth="975.0" spacing="20.0">
+        <HBox layoutX="13.0" layoutY="60.0" prefHeight="402.0" prefWidth="1475.0" spacing="20.0">
             <padding>
                 <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
             </padding>
             <children>
-                <BorderPane prefHeight="342.0" prefWidth="460.0" style="-fx-border-color: black; -fx-border-width: 2px; -fx-border-radius: 10;">
+                <BorderPane prefHeight="362.0" prefWidth="855.0" style="-fx-border-color: black; -fx-border-width: 2px; -fx-border-radius: 10;">
                     <center>
-                        <VBox prefHeight="200.0" prefWidth="100.0" style="-fx-min-height: 100%; -fx-min-width: 100%;" BorderPane.alignment="CENTER">
+                        <VBox prefHeight="358.0" prefWidth="581.0" style="-fx-min-height: 100%; -fx-min-width: 100%;" BorderPane.alignment="CENTER">
                             <children>
                                 <GridPane>
                                     <columnConstraints>
-                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="199.0" minWidth="10.0" prefWidth="185.0" />
+                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="612.0" minWidth="10.0" prefWidth="519.0" />
+                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="297.0" minWidth="10.0" prefWidth="297.0" />
                                     </columnConstraints>
                                     <rowConstraints>
                                         <RowConstraints maxHeight="45.0" minHeight="10.0" prefHeight="31.0" vgrow="SOMETIMES" />
                                     </rowConstraints>
                                     <children>
-                                        <Label text="Parts">
+                                        <Label text="Appointments">
                                             <padding>
                                                 <Insets left="40.0" />
                                             </padding>
@@ -60,12 +59,18 @@
                                         <Insets right="15.0" top="20.0" />
                                     </padding>
                                 </GridPane>
-                                <TableView fx:id="appointmentTableView" prefHeight="244.0" prefWidth="454.0">
+                                <TableView fx:id="appointmentTableView" prefHeight="249.0" prefWidth="223.0">
                                     <columns>
-                                        <TableColumn fx:id="appointmentIdCol" prefWidth="75.0" text="Part ID" />
-                                        <TableColumn fx:id="titleCol" prefWidth="112.0" text="Part Name" />
-                                        <TableColumn fx:id="descriptionCol" prefWidth="124.0" text="Inventory Level" />
-                                        <TableColumn fx:id="locationCol" prefWidth="122.0" text="Price/Cost per Unit" />
+                                        <TableColumn fx:id="appointmentIdCol" prefWidth="39.0" text="ID" />
+                                        <TableColumn fx:id="titleCol" prefWidth="96.0" text="Title" />
+                                        <TableColumn fx:id="typeCol" prefWidth="77.0" text="Type" />
+                                        <TableColumn fx:id="descriptionCol" prefWidth="134.0" text="Description" />
+                              <TableColumn fx:id="locationCol" prefWidth="124.0" text="Location" />
+                              <TableColumn fx:id="contactIdCol" prefWidth="66.0" text="Contact ID" />
+                              <TableColumn fx:id="startCol" prefWidth="76.0" text="Start Time" />
+                              <TableColumn fx:id="endCol" prefWidth="84.0" text="End Time" />
+                              <TableColumn fx:id="customerIDCol" minWidth="0.0" prefWidth="75.0" text="Customer ID" />
+                              <TableColumn fx:id="userIdCol" prefWidth="59.0" text="User Id" />
                                     </columns>
                                 </TableView>
                                 <GridPane prefHeight="61.0" prefWidth="434.0">
@@ -105,9 +110,9 @@
                         </VBox>
                     </center>
                 </BorderPane>
-                <BorderPane prefHeight="342.0" prefWidth="460.0" style="-fx-border-color: black; -fx-border-width: 2px; -fx-border-radius: 10;">
+                <BorderPane prefHeight="359.0" prefWidth="541.0" style="-fx-border-color: black; -fx-border-width: 2px; -fx-border-radius: 10;">
                     <center>
-                        <VBox prefHeight="200.0" prefWidth="100.0" style="-fx-min-height: 100%; -fx-min-width: 100%;" BorderPane.alignment="CENTER">
+                        <VBox prefHeight="358.0" prefWidth="488.0" style="-fx-min-height: 100%; -fx-min-width: 100%;" BorderPane.alignment="CENTER">
                             <children>
                                 <GridPane>
                                     <columnConstraints>
@@ -118,7 +123,7 @@
                                         <RowConstraints maxHeight="45.0" minHeight="10.0" prefHeight="31.0" vgrow="SOMETIMES" />
                                     </rowConstraints>
                                     <children>
-                                        <Label prefHeight="20.0" prefWidth="129.0" text="Products">
+                                        <Label prefHeight="20.0" prefWidth="129.0" text="Customers">
                                             <padding>
                                                 <Insets left="40.0" />
                                             </padding>
@@ -133,10 +138,12 @@
                                 </GridPane>
                                 <TableView fx:id="customersTableView" prefHeight="244.0" prefWidth="454.0">
                                     <columns>
-                                        <TableColumn fx:id="customerIdCol" prefWidth="75.0" text="Product ID" />
-                                        <TableColumn fx:id="customerNameCol" prefWidth="112.0" text="Product Name" />
-                                        <TableColumn fx:id="addressCol" prefWidth="124.0" text="Inventory Level" />
-                                        <TableColumn fx:id="postalCodeCol" prefWidth="108.0" text="Price/Cost per Unit" />
+                                        <TableColumn fx:id="customerIdCol" prefWidth="44.0" text="ID" />
+                                        <TableColumn fx:id="customerNameCol" prefWidth="81.0" text="Name" />
+                                        <TableColumn fx:id="addressCol" prefWidth="96.0" text="Address" />
+                                        <TableColumn fx:id="phoneCol" prefWidth="101.0" text="Phone" />
+                              <TableColumn fx:id="divisionCol" prefWidth="115.0" text="State/Province" />
+                              <TableColumn fx:id="postalCodeCol" prefWidth="75.0" text="Postal Code" />
                                     </columns>
                                 </TableView>
                                 <GridPane prefHeight="61.0" prefWidth="434.0">
@@ -178,7 +185,7 @@
                 </BorderPane>
             </children>
         </HBox>
-        <HBox layoutX="830.0" layoutY="454.0" prefHeight="62.0" prefWidth="140.0">
+        <HBox layoutX="1308.0" layoutY="454.0" prefHeight="62.0" prefWidth="140.0">
             <children>
                 <Button mnemonicParsing="false" onAction="#onActionExitProgram" text="Exit">
                     <HBox.margin>

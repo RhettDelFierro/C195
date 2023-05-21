@@ -62,7 +62,7 @@ public class CentralController implements Initializable {
     private TableColumn<Appointment, Integer> customerIDCol;
 
     @FXML
-    private TableColumn<Appointment, Integer> UserIdCol;
+    private TableColumn<Appointment, Integer> userIdCol;
 
     @FXML
     private TableView<Appointment> appointmentTableView;
@@ -199,7 +199,7 @@ public class CentralController implements Initializable {
 
         stage = (Stage)((Button)event.getSource()).getScene().getWindow();
         Parent scene = loader.getRoot();
-        stage.setScene(new Scene(scene, 500, 530));
+        stage.setScene(new Scene(scene, 1500, 530));
         stage.showAndWait();
     }
 
@@ -225,7 +225,7 @@ public class CentralController implements Initializable {
 
         stage = (Stage)((Button)event.getSource()).getScene().getWindow();
         Parent scene = loader.getRoot();
-        stage.setScene(new Scene(scene, 1000, 600));
+        stage.setScene(new Scene(scene, 1500, 530));
         stage.showAndWait();
     }
 
@@ -244,16 +244,21 @@ public class CentralController implements Initializable {
 
             appointmentIdCol.setCellValueFactory(new PropertyValueFactory<>("appointmentId"));
             titleCol.setCellValueFactory(new PropertyValueFactory<>("title"));
+            typeCol.setCellValueFactory(new PropertyValueFactory<>("type"));
             descriptionCol.setCellValueFactory(new PropertyValueFactory<>("description"));
             locationCol.setCellValueFactory(new PropertyValueFactory<>("location"));
             contactIdCol.setCellValueFactory(new PropertyValueFactory<>("contactId"));
-            typeCol.setCellValueFactory(new PropertyValueFactory<>("type"));
-
+            startCol.setCellValueFactory(new PropertyValueFactory<>("start"));
+            endCol.setCellValueFactory(new PropertyValueFactory<>("end"));
+            customerIDCol.setCellValueFactory(new PropertyValueFactory<>("customerId"));
+            userIdCol.setCellValueFactory(new PropertyValueFactory<>("userId"));
 
             customersTableView.setItems(ListManagement.getAllCustomers());
             customerIdCol.setCellValueFactory(new PropertyValueFactory<>("customerId"));
             customerNameCol.setCellValueFactory(new PropertyValueFactory<>("customerName"));
             addressCol.setCellValueFactory(new PropertyValueFactory<>("address"));
+            phoneCol.setCellValueFactory(new PropertyValueFactory<>("phone"));
+            divisionCol.setCellValueFactory(new PropertyValueFactory<>("divisionId"));
             postalCodeCol.setCellValueFactory(new PropertyValueFactory<>("postalCode"));
         } catch (SQLException e) {
             throw new RuntimeException(e);

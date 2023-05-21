@@ -20,7 +20,7 @@ public class Utils {
     public static void changeScene(ActionEvent event, String viewName) throws IOException {
         Stage stage = (Stage) ((Button)event.getSource()).getScene().getWindow();
         Parent scene = FXMLLoader.load(Utils.class.getResource("/rhettdelfierro/c195/" + viewName + ".fxml"));
-        stage.setScene(new Scene(scene, 1500, 800));
+        stage.setScene(new Scene(scene, 1500, 530));
         stage.show();
     }
 
