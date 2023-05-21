@@ -164,7 +164,7 @@ public class ListManagement {
     public static void deleteCustomer(Customer customer) throws SQLException {
         ObservableList<Appointment> appointments = AppointmentStore.selectByCustomerId(customer.getCustomerId());
         if (appointments.size() > 0) {
-            Errors.showErrorDialog("Cannot delete customer with appointments. PLease delete these appointments first.");
+            Errors.showErrorDialog("Cannot delete customer with appointments. Please delete these appointments first.");
             return;
         }
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -233,10 +233,12 @@ public class ListManagement {
         }
 
         Predicate<Appointment> predicate = a -> a.getCustomerId() == appointment.getCustomerId() &&
-                DateTime.isTimeBetweenTwoLocalTimes(appointment.getStart(), a.getStart(), a.getEnd()) ||
-                DateTime.isTimeBetweenTwoLocalTimes(appointment.getEnd(), a.getStart(), a.getEnd());
+                (DateTime.isTimeBetweenTwoLocalTimes(appointment.getStart(), a.getStart(), a.getEnd()) ||
+                DateTime.isTimeBetweenTwoLocalTimes(appointment.getEnd(), a.getStart(), a.getEnd()));
         ObservableList<Appointment> filteredList = appointments.filtered(predicate);
         if (filteredList.size() > 0) {
+            System.out.print("Customer clashes with " + appointment.getCustomerId());
+            filteredList.iterator().forEachRemaining(a -> System.out.println(a.getCustomerId()));
             Errors.showErrorDialog("Appointment clashes with another appointment. Please choose another time.");
             return;
         }
