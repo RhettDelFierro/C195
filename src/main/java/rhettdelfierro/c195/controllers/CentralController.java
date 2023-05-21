@@ -20,6 +20,7 @@ import rhettdelfierro.c195.models.Customer;
 import rhettdelfierro.c195.models.User;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
@@ -123,11 +124,12 @@ public class CentralController implements Initializable {
      */
     @FXML
     void onActionDeleteAppointment(ActionEvent event) throws SQLException {
-        Appointment partForDeletion = appointmentTableView.getSelectionModel().getSelectedItem();
-        if (partForDeletion == null) {
-            Errors.showErrorDialog("There is no part selected for deletion.");
+        Appointment appointmentForDeletion = appointmentTableView.getSelectionModel().getSelectedItem();
+        if (appointmentForDeletion == null) {
+            Errors.showErrorDialog("There is no appointment selected for deletion.");
         } else {
             ListManagement.deleteAppointment(appointmentTableView.getSelectionModel().getSelectedItem());
+            appointmentTableView.setItems(ListManagement.getAllAppointments());
         }
 
     }
@@ -141,9 +143,12 @@ public class CentralController implements Initializable {
     void onActionDeleteCustomer(ActionEvent event) throws SQLException {
         Customer customerForDeletion = customersTableView.getSelectionModel().getSelectedItem();
         if (customerForDeletion == null) {
-            Errors.showErrorDialog("There is no product selected for deletion.");
+            Errors.showErrorDialog("There is no customer selected for deletion.");
+        } else {
+            ListManagement.deleteCustomer(customersTableView.getSelectionModel().getSelectedItem());
+            customersTableView.setItems(ListManagement.getAllCustomers());
         }
-        ListManagement.deleteCustomer(customersTableView.getSelectionModel().getSelectedItem());
+
     }
 
     /**
@@ -184,9 +189,15 @@ public class CentralController implements Initializable {
      *
      * @param event Action event
      * @throws IOException an IOEXception that will throw if the resource fails to fetch.
+     * @throws InvocationTargetException an InvocationTargetException that will throw if the resource fails to fetch.
      */
     @FXML
-    public void onActionModifyAppointment(ActionEvent event) throws IOException {
+    public void onActionModifyAppointment(ActionEvent event) throws IOException, InvocationTargetException {
+        Appointment appointmentToModify = appointmentTableView.getSelectionModel().getSelectedItem();
+        if (appointmentToModify == null) {
+            Errors.showErrorDialog("There is no appointment selected.");
+            return;
+        }
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(Utils.class.getResource("/rhettdelfierro/c195/modify-appointment.fxml"));
         loader.load();

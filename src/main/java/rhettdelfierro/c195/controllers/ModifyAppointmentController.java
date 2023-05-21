@@ -30,27 +30,17 @@ public class ModifyAppointmentController implements Initializable {
 
     @FXML
     private TextField appointmentIdTxt;
-
     @FXML
     private TextField titleTxt;
-
+    @FXML
+    private TextField typeTxt;
     @FXML
     private TextField descriptionTxt;
-
     @FXML
     private TextField locationTxt;
 
     @FXML
     private ComboBox<Contact> contactCombo;
-
-    @FXML
-    private TextField typeTxt;
-
-    @FXML
-    private ComboBox<Customer> customerCombo;
-
-    @FXML
-    private ComboBox<User> userCombo;
     @FXML
     private DatePicker startDatePicker;
     @FXML
@@ -63,6 +53,10 @@ public class ModifyAppointmentController implements Initializable {
     private ComboBox<String> endHourCombo;
     @FXML
     private ComboBox<String> endMinuteCombo;
+    @FXML
+    private ComboBox<Customer> customerCombo;
+    @FXML
+    private ComboBox<User> userCombo;
 
     ObservableList<String> hours = FXCollections.observableArrayList();
     ObservableList<String> minutes = FXCollections.observableArrayList();
@@ -85,8 +79,9 @@ public class ModifyAppointmentController implements Initializable {
             Errors.showErrorDialog("All date fields must be filled out.");
             return;
         }
-        if (startHourCombo.getSelectionModel().isEmpty() || startMinuteCombo.getSelectionModel().isEmpty() ||
-                endHourCombo.getSelectionModel().isEmpty() || endMinuteCombo.getSelectionModel().isEmpty()) {
+        // create variables for the values in the conditional below
+        if (startHourCombo.getSelectionModel().getSelectedItem().isEmpty() || startMinuteCombo.getSelectionModel().getSelectedItem().isEmpty() ||
+                endHourCombo.getSelectionModel().getSelectedItem().isEmpty() || endMinuteCombo.getSelectionModel().getSelectedItem().isEmpty()) {
             Errors.showErrorDialog("All time fields must be filled out.");
             return;
         }
@@ -105,6 +100,8 @@ public class ModifyAppointmentController implements Initializable {
         String end = endDatePicker.getValue() + " " + endHourCombo.getSelectionModel().getSelectedItem() + ":" +
                 endMinuteCombo.getSelectionModel().getSelectedItem() + ":00";
         Appointment appointment = new Appointment(id, title, description, location, type, start, end, customer.getCustomerId(), user.getUserId(), contact.getContactId());
+        System.out.println(appointment.getStart());
+        System.out.println(appointment.getEnd());
         ListManagement.updateAppointment(event, appointment);
     }
 
@@ -130,11 +127,15 @@ public class ModifyAppointmentController implements Initializable {
         LocalDateTime localDateTimeStart = LocalDateTime.parse(appointment.getStart(), formatter);
         LocalDateTime localDateTimeEnd = LocalDateTime.parse(appointment.getEnd(), formatter);
         startDatePicker.setValue(localDateTimeStart.toLocalDate());
-        startHourCombo.setValue(String.valueOf(localDateTimeStart.getHour()));
-        startMinuteCombo.setValue(String.valueOf(localDateTimeStart.getMinute()));
+        String startHour = localDateTimeStart.getHour() <= 9 ? "0" + localDateTimeStart.getHour() : String.valueOf(localDateTimeStart.getHour());
+        String startMinute = localDateTimeStart.getMinute() == 0 ? "00" : String.valueOf(localDateTimeStart.getMinute());
+        startHourCombo.setValue(startHour);
+        startMinuteCombo.setValue(startMinute);
+        String endHour = localDateTimeEnd.getHour() <= 9 ? "0" + localDateTimeEnd.getHour() : String.valueOf(localDateTimeEnd.getHour());
+        String endMinute = localDateTimeEnd.getMinute() == 0 ? "00" : String.valueOf(localDateTimeEnd.getMinute());
         endDatePicker.setValue(localDateTimeEnd.toLocalDate());
-        endHourCombo.setValue(String.valueOf(localDateTimeEnd.getHour()));
-        endMinuteCombo.setValue(String.valueOf(localDateTimeEnd.getMinute()));
+        endHourCombo.setValue(endHour);
+        endMinuteCombo.setValue(endMinute);
     }
 
     /**

@@ -17,8 +17,8 @@ public class AppointmentStore {
         ps.setString(2, appointment.getDescription());
         ps.setString(3, appointment.getLocation());
         ps.setString(4, appointment.getType());
-        ps.setString(5, appointment.getStart());
-        ps.setString(6, appointment.getEnd());
+        ps.setString(5, DateTime.convertFromLocalToUTC(appointment.getStart()));
+        ps.setString(6, DateTime.convertFromLocalToUTC(appointment.getEnd()));
         ps.setInt(7, appointment.getCustomerId());
         ps.setInt(8, appointment.getUserId());
         ps.setInt(9, appointment.getContactId());
@@ -33,8 +33,8 @@ public class AppointmentStore {
         ps.setString(2, appointment.getDescription());
         ps.setString(3, appointment.getLocation());
         ps.setString(4, appointment.getType());
-        ps.setString(5, appointment.getStart());
-        ps.setString(6, appointment.getEnd());
+        ps.setString(5, DateTime.convertFromLocalToUTC(appointment.getStart()));
+        ps.setString(6, DateTime.convertFromLocalToUTC(appointment.getEnd()));
         ps.setInt(7, appointment.getCustomerId());
         ps.setInt(8, appointment.getUserId());
         ps.setInt(9, appointment.getContactId());

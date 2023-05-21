@@ -98,7 +98,7 @@
                   <Font size="16.0" />
                </font>
             </Label>
-            <TextField fx:id="appointmentIdTxt" editable="false" promptText="Auto-Generated" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+            <TextField fx:id="appointmentIdTxt" disable="true" editable="false" promptText="Auto-Generated" GridPane.columnIndex="2" GridPane.rowIndex="1" />
             <TextField fx:id="titleTxt" layoutX="310.0" layoutY="55.0" GridPane.columnIndex="2" GridPane.rowIndex="2" />
             <TextField fx:id="typeTxt" layoutX="310.0" layoutY="93.0" GridPane.columnIndex="2" GridPane.rowIndex="3" />
             <TextField fx:id="descriptionTxt" layoutX="310.0" layoutY="131.0" GridPane.columnIndex="2" GridPane.rowIndex="4" />

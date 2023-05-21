@@ -76,6 +76,11 @@ public class AddAppointmentController implements Initializable {
             Errors.showErrorDialog("All time fields must be filled out.");
             return;
         }
+        if (customerCombo.getSelectionModel().isEmpty() || userCombo.getSelectionModel().isEmpty() ||
+                contactCombo.getSelectionModel().isEmpty()) {
+            Errors.showErrorDialog("All combo boxes must be filled out.");
+            return;
+        }
 
         String title = titleTxt.getText();
         String description = descriptionTxt.getText();

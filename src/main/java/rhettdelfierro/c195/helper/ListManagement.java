@@ -23,6 +23,7 @@ public class ListManagement {
 
     /**
      * Will re-populate date.
+     *
      * @param user the current user once logged in.
      * @throws SQLException
      */
@@ -47,6 +48,7 @@ public class ListManagement {
 
     /**
      * Will re-populate date.
+     *
      * @throws SQLException
      */
     public static void fetchAll() throws SQLException {
@@ -96,6 +98,7 @@ public class ListManagement {
 
     /**
      * Getter for divisions by countryId.
+     *
      * @param countryId the country id
      * @return the divisions
      */
@@ -145,6 +148,7 @@ public class ListManagement {
 
     /**
      * Delete Customer.
+     *
      * @param customer the customer to delete.
      * @throws SQLException
      */
@@ -167,6 +171,7 @@ public class ListManagement {
 
     /**
      * Delete Appointment.
+     *
      * @param appointment the appointment to delete.
      * @throws SQLException
      */
@@ -184,6 +189,7 @@ public class ListManagement {
 
     /**
      * Search for customers by given query.
+     *
      * @param query sql query string.
      * @throws SQLException
      */
@@ -195,7 +201,7 @@ public class ListManagement {
     /**
      * Create a new appointment.
      *
-     * @param event the event to change the scene.
+     * @param event       the event to change the scene.
      * @param appointment the appointment to create.
      * @throws SQLException
      * @throws IOException
@@ -207,7 +213,19 @@ public class ListManagement {
             Errors.showErrorDialog("Appointment cannot be in the past.");
             return;
         }
-        Predicate<Appointment> predicate = a -> DateTime.isTimeBetweenTwoLocalTimes(appointment.getStart(),a.getStart(),a.getEnd());
+        if (DateTime.isEndTimeBeforeStartTime(appointment.getStart(), appointment.getEnd())) {
+            Errors.showErrorDialog("Appointment cannot end before it starts.");
+            return;
+        }
+
+        if (!DateTime.isBetweenBusinessHours(appointment.getStart(), appointment.getEnd())) {
+            Errors.showErrorDialog("Appointment cannot be outside of business hours: 8AM-10PM EST and may not span multiple days.");
+            return;
+        }
+
+        Predicate<Appointment> predicate = a -> a.getCustomerId() == appointment.getCustomerId() &&
+                DateTime.isTimeBetweenTwoLocalTimes(appointment.getStart(), a.getStart(), a.getEnd()) ||
+                DateTime.isTimeBetweenTwoLocalTimes(appointment.getEnd(), a.getStart(), a.getEnd());
         ObservableList<Appointment> filteredList = appointments.filtered(predicate);
         if (filteredList.size() > 0) {
             Errors.showErrorDialog("Appointment clashes with another appointment. Please choose another time.");
@@ -226,7 +244,19 @@ public class ListManagement {
             Errors.showErrorDialog("Appointment cannot be in the past.");
             return;
         }
-        Predicate<Appointment> predicate = a -> DateTime.isTimeBetweenTwoLocalTimes(appointment.getStart(),a.getStart(),a.getEnd());
+        if (DateTime.isEndTimeBeforeStartTime(appointment.getStart(), appointment.getEnd())) {
+            Errors.showErrorDialog("Appointment cannot end before it starts.");
+            return;
+        }
+        if (!DateTime.isBetweenBusinessHours(appointment.getStart(), appointment.getEnd())) {
+            Errors.showErrorDialog("Appointment cannot be outside of business hours: 8AM-10PM EST and may not span multiple days.");
+            return;
+        }
+
+        Predicate<Appointment> predicate = a -> (a.getAppointmentId() != appointment.getAppointmentId()) &&
+                a.getCustomerId() == appointment.getCustomerId() &&
+                (DateTime.isTimeBetweenTwoLocalTimes(appointment.getStart(), a.getStart(), a.getEnd()) ||
+                        DateTime.isTimeBetweenTwoLocalTimes(appointment.getEnd(), a.getStart(), a.getEnd()));
         ObservableList<Appointment> filteredList = appointments.filtered(predicate);
         if (filteredList.size() > 0) {
             Errors.showErrorDialog("Appointment clashes with another appointment. Please choose another time.");
