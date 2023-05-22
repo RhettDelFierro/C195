@@ -143,7 +143,7 @@ public class CentralController implements Initializable {
     }
 
     /**
-     * Deletes parts.
+     * Deletes appointments.
      *
      * @param event Action event
      */
@@ -166,7 +166,7 @@ public class CentralController implements Initializable {
     }
 
     /**
-     * Deletes product if there are no associated parts.
+     * Deletes customer if there are no associated appointments.
      * @param event Event object.
      * @throws SQLException SQLException that will throw if the SQL fails.
      */
@@ -189,29 +189,7 @@ public class CentralController implements Initializable {
     }
 
     /**
-     * Will search for products by name or id and populate table.
-     * @param event Event object.
-     */
-    @FXML
-    void onActionFilterAppointment(ActionEvent event) throws SQLException {
-        String searchText = searchAppointmentTxt.getText();
-        if (searchText.isEmpty()) {
-            appointmentTableView.setItems(ListManagement.getAllAppointments());
-        } else {
-            ObservableList<Appointment> results = ListManagement.searchByAppointmentTitle(searchText);
-            if (results.isEmpty()) {
-                Alert alert = new Alert(Alert.AlertType.WARNING);
-                alert.setTitle("Program error.");
-                alert.setContentText("No matching appointments found for your search term: " + searchText + ".");
-                alert.showAndWait();
-            } else {
-                appointmentTableView.setItems(results);
-            }
-        }
-    }
-
-    /**
-     * Exits program.
+     * Logs out of program.
      *
      * @param event Action event
      */

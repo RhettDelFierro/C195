@@ -17,7 +17,7 @@ public class Utils {
      * Helper method to change scenes
      *
      * @param event the action event
-     * @param viewName the name of the view to change to (add-part, modify-part, add-product, modify-product)
+     * @param viewName the name of the view to change to.
      * @throws IOException if getResource() fails to find the .fxml file
      */
     public static void changeScene(ActionEvent event, String viewName) throws IOException {
@@ -28,6 +28,11 @@ public class Utils {
         stage.show();
     }
 
+    /**
+     * Helper method to write to login_activity.txt. Will append timestamp to message.
+     *
+     * @param message the message to write to the file
+     */
     public static void writeFile(String message) {
         try {
             String fileName = "src/login_activity.txt";

@@ -24,7 +24,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 
 /**
- * Controller for Modify Part page.
+ * Controller for Modify Appointment page.
  */
 public class ModifyAppointmentController implements Initializable {
 
@@ -105,7 +105,7 @@ public class ModifyAppointmentController implements Initializable {
     }
 
     /**
-     * This method is used to load the part data as chosen from the main screen's table view.
+     * This method is used to load the appointment data as chosen from the main screen's table view.
      *
      * @param appointment the appointment to load
      * @param contact the contact to load
