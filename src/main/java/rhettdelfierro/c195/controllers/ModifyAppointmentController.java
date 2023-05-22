@@ -100,8 +100,7 @@ public class ModifyAppointmentController implements Initializable {
         String end = endDatePicker.getValue() + " " + endHourCombo.getSelectionModel().getSelectedItem() + ":" +
                 endMinuteCombo.getSelectionModel().getSelectedItem() + ":00";
         Appointment appointment = new Appointment(id, title, description, location, type, start, end, customer.getCustomerId(), user.getUserId(), contact.getContactId());
-        System.out.println(appointment.getStart());
-        System.out.println(appointment.getEnd());
+
         ListManagement.updateAppointment(event, appointment);
     }
 

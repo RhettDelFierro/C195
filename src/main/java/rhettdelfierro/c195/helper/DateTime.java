@@ -77,22 +77,27 @@ public class DateTime {
     }
 
     /**
-     * Checks if the given time is between the other two given times.
-     *
-     * @param time the time to check. Format: yyyy-MM-dd HH:mm:ss
-     * @param startTime the start time to check. Format: yyyy-MM-dd HH:mm:ss
-     * @param endTime the end time to check. Format: yyyy-MM-dd HH:mm:ss
-     * @return true if the given time is between the other two given times, false otherwise
+     * Check if there is overlap between the given times.
+     * @param start1 start time of first interval. Format: yyyy-MM-dd HH:mm:ss
+     * @param end1 end time of first interval. Format: yyyy-MM-dd HH:mm:ss
+     * @param start2 start time of second interval. Format: yyyy-MM-dd HH:mm:ss
+     * @param end2 end time of second interval. Format: yyyy-MM-dd HH:mm:ss
+     * @return true if there is overlap between the given times, false otherwise
      */
-    public static boolean isTimeBetweenTwoLocalTimes(String time, String startTime, String endTime) {
+    public static boolean areIntervalsOverlapping(String start1, String end1, String start2, String end2) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        LocalDateTime localDateTime = LocalDateTime.parse(time, formatter);
-        LocalDateTime localStartDateTime = LocalDateTime.parse(startTime, formatter);
-        LocalDateTime localEndDateTime = LocalDateTime.parse(endTime, formatter);
-        ZonedDateTime localZonedDateTime = localDateTime.atZone(ZoneId.systemDefault());
-        ZonedDateTime localStartZonedDateTime = localStartDateTime.atZone(ZoneId.systemDefault());
-        ZonedDateTime localEndZonedDateTime = localEndDateTime.atZone(ZoneId.systemDefault());
-        return localZonedDateTime.isEqual(localStartZonedDateTime) || (localZonedDateTime.isAfter(localStartZonedDateTime) && localZonedDateTime.isBefore(localEndZonedDateTime));
+
+        LocalDateTime start1DateTime = LocalDateTime.parse(start1, formatter);
+        LocalDateTime end1DateTime = LocalDateTime.parse(end1, formatter);
+        LocalDateTime start2DateTime = LocalDateTime.parse(start2, formatter);
+        LocalDateTime end2DateTime = LocalDateTime.parse(end2, formatter);
+
+        ZonedDateTime start1ZonedDateTime = start1DateTime.atZone(ZoneId.systemDefault());
+        ZonedDateTime end1ZonedDateTime = end1DateTime.atZone(ZoneId.systemDefault());
+        ZonedDateTime start2ZonedDateTime = start2DateTime.atZone(ZoneId.systemDefault());
+        ZonedDateTime end2ZonedDateTime = end2DateTime.atZone(ZoneId.systemDefault());
+
+        return start1ZonedDateTime.isBefore(end2ZonedDateTime) && end1ZonedDateTime.isAfter(start2ZonedDateTime);
     }
 
     /**
@@ -110,16 +115,29 @@ public class DateTime {
         ZonedDateTime zonedStartTime = localStartTime.withZoneSameInstant(estZoneId);
         ZonedDateTime zonedEndTime = localEndTime.withZoneSameInstant(estZoneId);
 
-        // The times span multiple days
-        if(!zonedStartTime.toLocalDate().equals(zonedEndTime.toLocalDate())) {
-            return false;
-        }
-
         ZonedDateTime startOfDay = zonedStartTime.toLocalDate().atStartOfDay(estZoneId);
         ZonedDateTime eightAm = startOfDay.plusHours(openingHour);
         ZonedDateTime tenPm = startOfDay.plusHours(closingHour);
 
         return !zonedStartTime.isBefore(eightAm) && !zonedEndTime.isAfter(tenPm);
+    }
+
+    /**
+     * Checks if the given time spans more than one day.
+     * @param startTime a String representing the start time to check. Format: yyyy-MM-dd HH:mm:ss
+     * @param endTime a String representing the end time to check. Format: yyyy-MM-dd HH:mm:ss
+     * @return true if the time is between the business hours, false otherwise.
+     */
+    public static boolean isMoreThanOneDay(String startTime, String endTime) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        ZonedDateTime localStartTime = LocalDateTime.parse(startTime, formatter).atZone(ZoneId.systemDefault());
+        ZonedDateTime localEndTime = LocalDateTime.parse(endTime, formatter).atZone(ZoneId.systemDefault());
+
+        ZoneId estZoneId = ZoneId.of(businessZoneId);
+        ZonedDateTime zonedStartTime = localStartTime.withZoneSameInstant(estZoneId);
+        ZonedDateTime zonedEndTime = localEndTime.withZoneSameInstant(estZoneId);
+
+        return !zonedStartTime.toLocalDate().equals(zonedEndTime.toLocalDate());
     }
 
     /**

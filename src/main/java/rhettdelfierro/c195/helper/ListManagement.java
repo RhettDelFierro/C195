@@ -53,7 +53,7 @@ public class ListManagement {
             Division division = DivisionStore.selectById(customer.getDivisionId());
             customer.setDivisionName(division.getDivision());
         }
-        for (Appointment appointment: appointments) {
+        for (Appointment appointment : appointments) {
             Contact contact = ContactStore.selectContactById(appointment.getContactId());
             appointment.setContactName(contact.getContactName());
         }
@@ -83,7 +83,7 @@ public class ListManagement {
             Division division = DivisionStore.selectById(customer.getDivisionId());
             customer.setDivisionName(division.getDivision());
         }
-        for (Appointment appointment: appointments) {
+        for (Appointment appointment : appointments) {
             Contact contact = ContactStore.selectContactById(appointment.getContactId());
             appointment.setContactName(contact.getContactName());
         }
@@ -118,6 +118,7 @@ public class ListManagement {
 
     /**
      * Getter for divisions.
+     *
      * @return the divisions
      */
     public static ObservableList<Division> getAllDivisions() {
@@ -146,6 +147,7 @@ public class ListManagement {
      * Getter for monthly type reports.
      * Lambda function to utilize de-limiters to split the type and month.
      * Another lambda function was used as a callback function to add the new monthly type report to the list.
+     *
      * @return the monthly type reports
      */
     public static ObservableList<MonthlyTypeReport> getAllMonthlyTypeReports() {
@@ -275,6 +277,7 @@ public class ListManagement {
      * Create a new appointment.
      * Lambda function used here as a callback. There is another similar function but different in updateAppointment,
      * this makes a good use case for create a lambda function.
+     *
      * @param event       the event to change the scene.
      * @param appointment the appointment to create.
      * @throws SQLException
@@ -291,17 +294,21 @@ public class ListManagement {
             Errors.showErrorDialog("Appointment cannot end before it starts.");
             return;
         }
-
-        if (!DateTime.isBetweenBusinessHours(appointment.getStart(), appointment.getEnd())) {
-            Errors.showErrorDialog("Appointment cannot be outside of business hours: 8AM-10PM EST and may not span multiple days.");
+        if (DateTime.isMoreThanOneDay(appointment.getStart(), appointment.getEnd())) {
+            Errors.showErrorDialog("Appointment may not span more than one day.");
             return;
         }
-
-        ObservableList<Appointment> filteredList = appointments.filtered(a -> a.getCustomerId() == appointment.getCustomerId() &&
-                (DateTime.isTimeBetweenTwoLocalTimes(appointment.getStart(), a.getStart(), a.getEnd()) ||
-                        DateTime.isTimeBetweenTwoLocalTimes(appointment.getEnd(), a.getStart(), a.getEnd())));
+        if (!DateTime.isBetweenBusinessHours(appointment.getStart(), appointment.getEnd())) {
+            Errors.showErrorDialog("Appointment cannot be outside of business hours: 8AM-10PM EST.");
+            return;
+        }
+        ObservableList<Appointment> filteredList = appointments.filtered(a -> DateTime.areIntervalsOverlapping(appointment.getStart(), appointment.getEnd(), a.getStart(), a.getEnd()));
         if (filteredList.size() > 0) {
             Errors.showErrorDialog("Appointment clashes with another appointment. Please choose another time.");
+            return;
+        }
+        if (appointment.getStart() == appointment.getEnd()) {
+            Errors.showErrorDialog("Appointment must be at least 15 minutes.");
             return;
         }
         int rowsAffected = AppointmentStore.insert(appointment);
@@ -316,6 +323,7 @@ public class ListManagement {
      * Update an appointment.
      * Lambda function used here as a callback. There is another similar function but different in createAppointment,
      * this makes a good use case for create a lambda function.
+     *
      * @param event       the event to change the scene.
      * @param appointment the appointment to update.
      * @throws SQLException
@@ -330,15 +338,23 @@ public class ListManagement {
             Errors.showErrorDialog("Appointment cannot end before it starts.");
             return;
         }
+        if (appointment.getStart() == appointment.getEnd()) {
+            Errors.showErrorDialog("Appointment must be at least 15 minutes.");
+            return;
+        }
+        if (DateTime.isMoreThanOneDay(appointment.getStart(), appointment.getEnd())) {
+            Errors.showErrorDialog("Appointment may not span more than one day.");
+            return;
+        }
         if (!DateTime.isBetweenBusinessHours(appointment.getStart(), appointment.getEnd())) {
-            Errors.showErrorDialog("Appointment cannot be outside of business hours: 8AM-10PM EST and may not span multiple days.");
+            Errors.showErrorDialog("Appointment cannot be outside of business hours: 8AM-10PM EST.");
             return;
         }
 
+
+
         ObservableList<Appointment> filteredList = appointments.filtered(a -> (a.getAppointmentId() != appointment.getAppointmentId()) &&
-                a.getCustomerId() == appointment.getCustomerId() &&
-                (DateTime.isTimeBetweenTwoLocalTimes(appointment.getStart(), a.getStart(), a.getEnd()) ||
-                        DateTime.isTimeBetweenTwoLocalTimes(appointment.getEnd(), a.getStart(), a.getEnd())));
+                DateTime.areIntervalsOverlapping(appointment.getStart(), appointment.getEnd(), a.getStart(), a.getEnd()));
         if (filteredList.size() > 0) {
             Errors.showErrorDialog("Appointment clashes with another appointment. Please choose another time.");
             return;
@@ -389,6 +405,7 @@ public class ListManagement {
 
     /**
      * Get a country by id.
+     *
      * @param countryId
      * @return country
      */
@@ -403,6 +420,7 @@ public class ListManagement {
 
     /**
      * Get a division by id.
+     *
      * @param divisionId
      * @return division
      */
@@ -417,6 +435,7 @@ public class ListManagement {
 
     /**
      * Get an appointment by id.
+     *
      * @param appointmentId
      * @return appointment
      */
@@ -431,6 +450,7 @@ public class ListManagement {
 
     /**
      * Get a contact by id.
+     *
      * @param contactId
      * @return contact
      */
@@ -445,6 +465,7 @@ public class ListManagement {
 
     /**
      * Get a customer by id.
+     *
      * @param customerId
      * @return customer
      */
@@ -459,6 +480,7 @@ public class ListManagement {
 
     /**
      * Get a user by id.
+     *
      * @param userId
      * @return user
      */
@@ -478,16 +500,14 @@ public class ListManagement {
      * @param month the month to get appointments for.
      * @return an observable list of appointments.
      */
-    public static ObservableList<MonthlyTypeReport>getAppointmentsByMonth(String month) {
-        return monthlyTypeReports.filtered(m -> {
-            System.out.println(m.getMonth());
-           return m.getMonth().equals(month);
-        });
+    public static ObservableList<MonthlyTypeReport> getAppointmentsByMonth(String month) {
+        return monthlyTypeReports.filtered(m -> m.getMonth().equals(month));
     }
 
     /**
      * Get all appointments for a given contact.
      * Lambda used here as a first class function for filtering.
+     *
      * @param contact the contact to get appointments for.
      * @return an observable list of appointments.
      */
@@ -498,6 +518,7 @@ public class ListManagement {
     /**
      * Check if the current user has any appointments within 15 minutes.
      * Lambda used here as a first class function for filtering.
+     *
      * @return the appointment the current user has within 15 minutes.
      */
     public static ObservableList<Appointment> getCurrentUserAppointmentsWithin15Minutes() {
