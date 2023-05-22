@@ -206,7 +206,7 @@
                   <Insets right="15.0" />
                </HBox.margin>
             </Button>
-                <Button maxWidth="110.0" mnemonicParsing="false" onAction="#onActionExitProgram" text="Exit Program">
+                <Button maxWidth="110.0" mnemonicParsing="false" onAction="#onActionLogout" text="Logout">
                     <HBox.margin>
                         <Insets />
                     </HBox.margin>

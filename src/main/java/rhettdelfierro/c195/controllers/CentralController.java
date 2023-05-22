@@ -5,12 +5,12 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
+import rhettdelfierro.c195.helper.DateTime;
 import rhettdelfierro.c195.helper.Errors;
 import rhettdelfierro.c195.helper.ListManagement;
 import rhettdelfierro.c195.helper.Utils;
@@ -153,7 +153,13 @@ public class CentralController implements Initializable {
         if (appointmentForDeletion == null) {
             Errors.showErrorDialog("There is no appointment selected for deletion.");
         } else {
-            ListManagement.deleteAppointment(appointmentTableView.getSelectionModel().getSelectedItem());
+            int rowsAffected = ListManagement.deleteAppointment(appointmentTableView.getSelectionModel().getSelectedItem());
+            if (rowsAffected > 0) {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Appointment Deleted");
+                alert.setContentText("Appointment " + appointmentForDeletion.getAppointmentId() + "(type: " + appointmentForDeletion.getType() + ")" + " successfully deleted.");
+                alert.showAndWait();
+            }
             appointmentTableView.setItems(ListManagement.getAllAppointments());
         }
 
@@ -170,7 +176,13 @@ public class CentralController implements Initializable {
         if (customerForDeletion == null) {
             Errors.showErrorDialog("There is no customer selected for deletion.");
         } else {
-            ListManagement.deleteCustomer(customersTableView.getSelectionModel().getSelectedItem());
+            int rowsAffected = ListManagement.deleteCustomer(customersTableView.getSelectionModel().getSelectedItem());
+            if (rowsAffected > 0) {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Customer Deleted");
+                alert.setContentText("Customer " + customerForDeletion.getCustomerName() + " successfully deleted.");
+                alert.showAndWait();
+            }
             customersTableView.setItems(ListManagement.getAllCustomers());
         }
 
@@ -204,9 +216,9 @@ public class CentralController implements Initializable {
      * @param event Action event
      */
     @FXML
-    void onActionExitProgram(ActionEvent event) {
-        Stage stage = (Stage) ((Node)event.getSource()).getScene().getWindow();
-        stage.close();
+    void onActionLogout(ActionEvent event) throws IOException {
+        ListManagement.logout();
+        Utils.changeScene(event, "login");
     }
 
     /**
@@ -270,6 +282,47 @@ public class CentralController implements Initializable {
         stage.showAndWait();
     }
 
+    public void sendUser(User user) {
+        try {
+            ListManagement.fetchAll(user);
+            appointmentTableView.setItems(ListManagement.getAllAppointments());
+            appointmentIdCol.setCellValueFactory(new PropertyValueFactory<>("appointmentId"));
+            titleCol.setCellValueFactory(new PropertyValueFactory<>("title"));
+            typeCol.setCellValueFactory(new PropertyValueFactory<>("type"));
+            descriptionCol.setCellValueFactory(new PropertyValueFactory<>("description"));
+            locationCol.setCellValueFactory(new PropertyValueFactory<>("location"));
+            contactNameCol.setCellValueFactory(new PropertyValueFactory<>("contactName"));
+            startCol.setCellValueFactory(new PropertyValueFactory<>("start"));
+            endCol.setCellValueFactory(new PropertyValueFactory<>("end"));
+            customerIDCol.setCellValueFactory(new PropertyValueFactory<>("customerId"));
+            userIdCol.setCellValueFactory(new PropertyValueFactory<>("userId"));
+
+            customersTableView.setItems(ListManagement.getAllCustomers());
+            customerIdCol.setCellValueFactory(new PropertyValueFactory<>("customerId"));
+            customerNameCol.setCellValueFactory(new PropertyValueFactory<>("customerName"));
+            addressCol.setCellValueFactory(new PropertyValueFactory<>("address"));
+            phoneCol.setCellValueFactory(new PropertyValueFactory<>("phone"));
+            divisionCol.setCellValueFactory(new PropertyValueFactory<>("divisionName"));
+            postalCodeCol.setCellValueFactory(new PropertyValueFactory<>("postalCode"));
+            ObservableList<Appointment> appointments = ListManagement.getCurrentUserAppointmentsWithin15Minutes();
+            if (appointments.size() > 0) {
+                for (Appointment appointment : appointments) {
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Appointment Reminder");
+                    alert.setContentText("You have an appointment ID: " + appointment.getAppointmentId() + " with contact " + appointment.getContactName() + " at " + DateTime.convertTimeFormatAMPM(appointment.getStart()) + ".");
+                    alert.showAndWait();
+                }
+            } else {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Appointment Reminder");
+                alert.setContentText("You have no upcoming appointments.");
+                alert.showAndWait();
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     /**
      * Initializes the controller class.
      * Populates both tables with init data primarily.
@@ -304,6 +357,5 @@ public class CentralController implements Initializable {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-//        partsTableView.getSelectionModel().select(Inventory.lookupAppointment(5));
     }
 }

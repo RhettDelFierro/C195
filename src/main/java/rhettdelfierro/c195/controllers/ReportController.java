@@ -105,7 +105,6 @@ public class ReportController implements Initializable {
             monthCol.setCellValueFactory(new PropertyValueFactory<>("month"));
             monthTypeCol.setCellValueFactory(new PropertyValueFactory<>("type"));
             typeCountCol.setCellValueFactory(new PropertyValueFactory<>("count"));
-
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

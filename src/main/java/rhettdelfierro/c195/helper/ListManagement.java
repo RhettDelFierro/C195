@@ -219,21 +219,24 @@ public class ListManagement {
      * @param customer the customer to delete.
      * @throws SQLException
      */
-    public static void deleteCustomer(Customer customer) throws SQLException {
+    public static int deleteCustomer(Customer customer) throws SQLException {
         ObservableList<Appointment> appointments = AppointmentStore.selectByCustomerId(customer.getCustomerId());
         if (appointments.size() > 0) {
             Errors.showErrorDialog("Cannot delete customer with appointments. Please delete these appointments first.");
-            return;
+            return 0;
         }
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Confirm deletion.");
         alert.setContentText("Are you sure you want to delete the customer: " + customer.getCustomerName() + "?");
         alert.showAndWait();
         if (alert.getResult() != ButtonType.OK) {
-            return;
+            return 0;
         }
-        CustomerStore.delete(customer.getCustomerId());
-        fetchAll();
+        int rowsAffected = CustomerStore.delete(customer.getCustomerId());
+        if (rowsAffected > 0) {
+            fetchAll();
+        }
+        return rowsAffected;
     }
 
     /**
@@ -242,16 +245,19 @@ public class ListManagement {
      * @param appointment the appointment to delete.
      * @throws SQLException
      */
-    public static void deleteAppointment(Appointment appointment) throws SQLException {
+    public static int deleteAppointment(Appointment appointment) throws SQLException {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Confirm deletion.");
         alert.setContentText("Are you sure you want to delete the appointment: " + appointment.getTitle() + "?");
         alert.showAndWait();
         if (alert.getResult() != ButtonType.OK) {
-            return;
+            return 0;
         }
-        AppointmentStore.delete(appointment.getAppointmentId());
-        fetchAll();
+        int rowsAffected = AppointmentStore.delete(appointment.getAppointmentId());
+        if (rowsAffected > 0) {
+            fetchAll();
+        }
+        return rowsAffected;
     }
 
     /**
@@ -487,5 +493,19 @@ public class ListManagement {
      */
     public static ObservableList<Appointment> getAppointmentsByContact(Contact contact) {
         return appointments.filtered(a -> a.getContactId() == contact.getContactId());
+    }
+
+    /**
+     * Check if the current user has any appointments within 15 minutes.
+     * Lambda used here as a first class function for filtering.
+     * @return the appointment the current user has within 15 minutes.
+     */
+    public static ObservableList<Appointment> getCurrentUserAppointmentsWithin15Minutes() {
+        return appointments.filtered(a -> a.getUserId() == currentUser.getUserId() &&
+                DateTime.isWithin15Minutes(a.getStart()));
+    }
+
+    public static void logout() {
+        currentUser = null;
     }
 }
