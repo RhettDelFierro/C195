@@ -17,6 +17,8 @@ import rhettdelfierro.c195.helper.DateTime;
 import rhettdelfierro.c195.helper.Utils;
 import rhettdelfierro.c195.models.User;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 public class LoginController implements Initializable {
@@ -52,6 +54,7 @@ public class LoginController implements Initializable {
     private String errorMessage;
     private String continueMessage;
 
+
     @FXML
     void onActionExit(ActionEvent event) {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -59,12 +62,13 @@ public class LoginController implements Initializable {
     }
 
     @FXML
-    void onActionLogin(ActionEvent event) throws Exception {
+    void onActionLogin(ActionEvent event) throws IOException, SQLException {
         String username = usernameTxt.getText();
         String password = passwordTxt.getText();
         User user = UserStore.login(username, password);
 
         if (user != null) {
+            Utils.writeFile("User " + username + " successfully logged-in at");
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(Utils.class.getResource("/rhettdelfierro/c195/central-view.fxml"));
             loader.load();
@@ -80,6 +84,7 @@ public class LoginController implements Initializable {
             alert.setTitle(error);
             alert.setContentText(errorMessage);
             alert.showAndWait();
+            Utils.writeFile("User " + username + " gave invalid log-in at");
         }
     }
 

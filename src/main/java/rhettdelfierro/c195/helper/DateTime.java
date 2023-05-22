@@ -2,6 +2,7 @@ package rhettdelfierro.c195.helper;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
@@ -187,5 +188,14 @@ public class DateTime {
 
         DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("hh:mm a");
         return dateTime.format(outputFormatter);
+    }
+
+    /**
+     * Get current UTC time and date in the format yyyy-MM-dd HH:mm:ss
+     * @return current UTC time and date in the format yyyy-MM-dd HH:mm:ss
+     */
+    public static String getCurrentUTCTime() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        return LocalDateTime.now(ZoneOffset.UTC).format(formatter);
     }
 }

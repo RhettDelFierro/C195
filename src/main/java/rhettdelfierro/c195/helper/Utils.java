@@ -7,9 +7,12 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 
 public class Utils {
+
     /**
      * Helper method to change scenes
      *
@@ -25,4 +28,16 @@ public class Utils {
         stage.show();
     }
 
+    public static void writeFile(String message) {
+        try {
+            String fileName = "src/login_activity.txt";
+            FileWriter fileWriter = new FileWriter(fileName, true);
+            PrintWriter outputFile = new PrintWriter(fileWriter);
+            String loginActivity = message + " " + DateTime.getCurrentUTCTime() + " UTC";
+            outputFile.println(loginActivity);
+            outputFile.close();
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+    }
 }
