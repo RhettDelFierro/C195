@@ -2,6 +2,9 @@ package rhettdelfierro.c195.helper;
 
 import javafx.scene.control.Alert;
 
+/**
+ * Helper class to show error and warning dialogs.
+ */
 public class Errors {
 
     /**

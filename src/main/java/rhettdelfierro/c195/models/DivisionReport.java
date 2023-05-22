@@ -1,5 +1,8 @@
 package rhettdelfierro.c195.models;
 
+/**
+ * This class is used to create DivisionReport objects.
+ */
 public class DivisionReport {
     private String division;
     private int count;

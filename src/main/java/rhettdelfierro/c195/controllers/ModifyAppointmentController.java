@@ -149,8 +149,8 @@ public class ModifyAppointmentController implements Initializable {
     }
 
     /**
-     * Initializes this controller class from implementing the Initializable interface.
-     * Unused here but required for the interface.
+     * Initializes this controller class from the JavaFX framework.
+     * TIll will initialize the combo boxes with the appropriate data.
      *
      * @param url the url
      * @param resourceBundle the resource bundle folder

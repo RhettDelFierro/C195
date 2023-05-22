@@ -3,6 +3,9 @@ package rhettdelfierro.c195.models;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+/**
+ * This class is used to create Division objects.
+ */
 public class Division {
     private ObservableList<Customer> customers = FXCollections.observableArrayList();
     private int divisionId;

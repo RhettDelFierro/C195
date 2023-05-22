@@ -1,5 +1,8 @@
 package rhettdelfierro.c195.models;
 
+/**
+ * This class is used to represent an appointment.
+ */
 public class Appointment {
     private int appointmentId;
     private String title;

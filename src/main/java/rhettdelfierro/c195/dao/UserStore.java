@@ -7,7 +7,17 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * This class is used to interact with the users table in the database.
+ */
 public class UserStore {
+    /**
+     * This method is used to select a user by their ID.
+     * @param username username of the user to be selected.
+     * @param password password of the user to be selected.
+     * @return User object.
+     * @throws SQLException Exception thrown if the database query fails.
+     */
     public static User login(String username, String password) throws SQLException {
         String sql = "SELECT * FROM USERS WHERE User_Name = ? AND Password = ?";
         JDBC.openConnection();
@@ -26,6 +36,11 @@ public class UserStore {
         }
     }
 
+    /**
+     * This method is used to fetch all users from the database.
+     * @return ObservableList of User objects.
+     * @throws SQLException Exception thrown if the database query fails.
+     */
     public static ObservableList<User> fetchAll() throws SQLException {
         String sql = "SELECT * FROM USERS";
         PreparedStatement ps = JDBC.connection.prepareStatement(sql);

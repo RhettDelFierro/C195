@@ -526,6 +526,9 @@ public class ListManagement {
                 DateTime.isWithin15Minutes(a.getStart()));
     }
 
+    /**
+     * Logs current user out of the app.
+     */
     public static void logout() {
         currentUser = null;
     }

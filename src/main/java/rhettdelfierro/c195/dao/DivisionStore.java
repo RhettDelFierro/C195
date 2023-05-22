@@ -9,7 +9,15 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * This class is used to interact with the first_level_divisions table in the database.
+ */
 public class DivisionStore {
+    /**
+     * This method is used to fetch all divisions from the database.
+     * @return ObservableList of Division objects.
+     * @throws SQLException Exception thrown if the database query fails.
+     */
     public static ObservableList<Division> fetchAll() throws SQLException {
         String sql = "SELECT * FROM FIRST_LEVEL_DIVISIONS";
         PreparedStatement ps = JDBC.connection.prepareStatement(sql);
@@ -25,6 +33,12 @@ public class DivisionStore {
         return divisions;
     }
 
+    /**
+     * This method is used to fetch all divisions from the database by country ID.
+     * @param countryId ID of the country to fetch divisions for.
+     * @return ObservableList of Division objects.
+     * @throws SQLException Exception thrown if the database query fails.
+     */
     public static ObservableList<Division> selectByCountryId(int countryId) throws SQLException {
         String sql = "SELECT * FROM FIRST_LEVEL_DIVISIONS WHERE COUNTRY_ID = ?";
         PreparedStatement ps = JDBC.connection.prepareStatement(sql);
@@ -41,6 +55,12 @@ public class DivisionStore {
         return divisions;
     }
 
+    /**
+     * This method is used to fetch a division from the database by ID.
+     * @param divisionId ID of the division to fetch.
+     * @return Division object.
+     * @throws SQLException Exception thrown if the database query fails.
+     */
     public static Division selectById(int divisionId) throws SQLException {
         String sql = "SELECT * FROM FIRST_LEVEL_DIVISIONS WHERE DIVISION_ID = ?";
         PreparedStatement ps = JDBC.connection.prepareStatement(sql);
@@ -56,6 +76,12 @@ public class DivisionStore {
         return null;
     }
 
+    /**
+     * This method is used to get a count of instances each division appears for a customer.
+     * Basically to track how many customers live in each State/Providence.
+     * @return DivisionReport object.
+     * @throws SQLException Exception thrown if the database query fails.
+     */
     public static ObservableList<DivisionReport> getReports() throws SQLException {
         String sql = "SELECT fld.Division, COUNT(cus.Division_ID) AS Count FROM first_level_divisions AS fld LEFT JOIN customers AS cus ON fld.Division_ID = cus.Division_ID GROUP BY fld.Division;";
         PreparedStatement ps = JDBC.connection.prepareStatement(sql);

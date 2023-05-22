@@ -3,6 +3,9 @@ package rhettdelfierro.c195.models;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+/**
+ * This class is used to create Contact objects.
+ */
 public class Contact {
     private ObservableList<Appointment> appointments = FXCollections.observableArrayList();
     private int contactId;

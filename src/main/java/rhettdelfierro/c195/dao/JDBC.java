@@ -3,6 +3,9 @@ package rhettdelfierro.c195.dao;
 import java.sql.Connection;
 import java.sql.DriverManager;
 
+/**
+ * This class is used to connect to the database. Given for project.
+ */
 public abstract class JDBC {
     private static final String protocol = "jdbc";
     private static final String vendor = ":mysql:";
@@ -14,12 +17,14 @@ public abstract class JDBC {
     private static String password = "Passw0rd!"; // Password
     public static Connection connection;  // Connection Interface
 
+    /**
+     * This method is used to open a connection to the database.
+     */
     public static void openConnection()
     {
         try {
             Class.forName(driver); // Locate Driver
             connection = DriverManager.getConnection(jdbcUrl, userName, password); // Reference Connection object
-            System.out.println("Connection successful!");
         }
         catch(Exception e)
         {
@@ -27,6 +32,9 @@ public abstract class JDBC {
         }
     }
 
+    /**
+     * This method is used to close a connection to the database.
+     */
     public static void closeConnection() {
         try {
             connection.close();

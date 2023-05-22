@@ -21,6 +21,9 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 
+/**
+ * Controller for Login page.
+ */
 public class LoginController implements Initializable {
     Stage stage;
     Parent scene;
@@ -55,12 +58,22 @@ public class LoginController implements Initializable {
     private String continueMessage;
 
 
+    /**
+     * Exits the application.
+     * @param event
+     */
     @FXML
     void onActionExit(ActionEvent event) {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.close();
     }
 
+    /**
+     * Handles the login logic.
+     * @param event
+     * @throws IOException IOException possible during changing scenes.
+     * @throws SQLException SQLException possible during login when querying the database.
+     */
     @FXML
     void onActionLogin(ActionEvent event) throws IOException, SQLException {
         String username = usernameTxt.getText();
@@ -68,17 +81,21 @@ public class LoginController implements Initializable {
         User user = UserStore.login(username, password);
 
         if (user != null) {
-            Utils.writeFile("User " + username + " successfully logged-in at");
-            FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(Utils.class.getResource("/rhettdelfierro/c195/central-view.fxml"));
-            loader.load();
-            CentralController controller = loader.getController();
-            controller.sendUser(user);
+            try {
+                Utils.writeFile("User " + username + " successfully logged-in at");
+                FXMLLoader loader = new FXMLLoader();
+                loader.setLocation(Utils.class.getResource("/rhettdelfierro/c195/central-view.fxml"));
+                loader.load();
+                CentralController controller = loader.getController();
+                controller.sendUser(user);
 
-            stage = (Stage)((Button)event.getSource()).getScene().getWindow();
-            Parent scene = loader.getRoot();
-            stage.setScene(new Scene(scene, 1500, 530));
-            stage.showAndWait();
+                stage = (Stage)((Button)event.getSource()).getScene().getWindow();
+                Parent scene = loader.getRoot();
+                stage.setScene(new Scene(scene, 1500, 530));
+                stage.showAndWait();
+            } catch (RuntimeException e) {
+                e.printStackTrace();
+            }
         } else {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle(error);
@@ -88,6 +105,11 @@ public class LoginController implements Initializable {
         }
     }
 
+    /**
+     * Initializes the login view. Sets the labels and buttons to the correct language.
+     * @param location
+     * @param resources resource bundle.
+     */
     @Override
     public void initialize(java.net.URL location, java.util.ResourceBundle resources) {
         ResourceBundle rb = ResourceBundle.getBundle("bundle/lang", java.util.Locale.getDefault());
@@ -101,8 +123,6 @@ public class LoginController implements Initializable {
         cancel = rb.getString("cancel");
         errorMessage = rb.getString("error_login");
         continueMessage = rb.getString("ok");
-
-//        currentTimezoneLabel.setText(java.time.ZoneId.systemDefault().toString());
         currentTimezoneLabel.setText(DateTime.getCurrentTimezone());
     }
 }

@@ -26,10 +26,7 @@ import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 /**
- * MainController Initial screen of the app.
- *
- * RUNTIME ERROR: parseInt() would throw an IOException here, but we guard against that by using the checkValidInt
- *                helper functions.
+ * Controller for the main screen of the application.
  */
 public class CentralController implements Initializable {
     Stage stage;
@@ -127,7 +124,7 @@ public class CentralController implements Initializable {
     }
 
     /**
-     * Helper method to change scenes
+     * Helper method to change scenes to customer page.
      *
      * @param event Action event
      * @throws IOException an IOException that bubbles up.
@@ -137,6 +134,12 @@ public class CentralController implements Initializable {
         Utils.changeScene(event, "add-customer");
     }
 
+    /**
+     * Helper method to change scenes to reports page.
+     *
+     * @param event Action event
+     * @throws IOException an IOException that bubbles up.
+     */
     @FXML
     void onActionGoToReports(ActionEvent event) throws IOException {
         Utils.changeScene(event, "reports");
@@ -189,7 +192,7 @@ public class CentralController implements Initializable {
     }
 
     /**
-     * Logs out of program.
+     * Logs user out of program.
      *
      * @param event Action event
      */
@@ -260,6 +263,11 @@ public class CentralController implements Initializable {
         stage.showAndWait();
     }
 
+    /**
+     * Method to load data programmatically from another page.
+     *
+     * @param user User object.
+     */
     public void sendUser(User user) {
         try {
             ListManagement.fetchAll(user);

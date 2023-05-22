@@ -18,6 +18,9 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 
+/**
+ * Controller for Add Appointment page.
+ */
 public class AddAppointmentController implements Initializable {
 
     @FXML
@@ -111,8 +114,7 @@ public class AddAppointmentController implements Initializable {
 
     /**
      * Initializes this controller class from implementing the Initializable interface.
-     * Unused here but required for the interface.
-     *
+     * This will populate the combo boxes with the appropriate data for timestamps.
      * @param url the url
      * @param resourceBundle the resource bundle folder
      */

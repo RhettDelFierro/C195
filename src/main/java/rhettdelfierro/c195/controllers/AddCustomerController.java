@@ -17,6 +17,9 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 
+/**
+ * Controller for Add Customer page.
+ */
 public class AddCustomerController implements Initializable {
 
     @FXML
@@ -33,12 +36,23 @@ public class AddCustomerController implements Initializable {
     private ComboBox<Division> divisionCombo;
     @FXML
     private TextField postalCodeTxt;
+
+    /**
+     * Action event handler for changing country.
+     * This will update the division combo box to only show divisions from the selected country.
+     * @param event the action event
+     */
     @FXML
     void onActionCountryCombo(ActionEvent event) {
         Country country = countryCombo.getSelectionModel().getSelectedItem();
         divisionCombo.setItems(ListManagement.getDivisionsByCountryId(country.getCountryId()));
     }
 
+    /**
+     * Action event handler for changing division.
+     * This will update the country combo box to show the country of the selected division.
+     * @param event the action event
+     */
     @FXML
     void onActionDivisionCombo(ActionEvent event) {
         Division division = divisionCombo.getSelectionModel().getSelectedItem();
@@ -48,6 +62,13 @@ public class AddCustomerController implements Initializable {
         }
     }
 
+    /**
+     * Action event handler for clicking the Save Button. This will update and save the customer to the Database.
+     *
+     * @param event the action event
+     * @throws SQLException an SQLException that bubbles up.
+     * @throws IOException an IOException that bubbles up.
+     */
     @FXML
     void onActionSaveCustomer(ActionEvent event) throws SQLException, IOException {
         if (countryCombo.getSelectionModel().getSelectedItem() == null) {
@@ -68,7 +89,6 @@ public class AddCustomerController implements Initializable {
         String phone = phoneTxt.getText();
         String postalCode = postalCodeTxt.getText();
         Division division = divisionCombo.getSelectionModel().getSelectedItem();
-//        Country country = countryCombo.getSelectionModel().getSelectedItem();
         Customer customer = new Customer(name, address, postalCode, phone, division.getDivisionId());
         ListManagement.createCustomer(event, customer);
     }
@@ -84,6 +104,11 @@ public class AddCustomerController implements Initializable {
         Utils.changeScene(event, "central-view");
     }
 
+    /**
+     * Initializes the controller class. Primarily used to populate the country and division combo boxes.
+     * @param url the url
+     * @param rb the resource bundle
+     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         countryCombo.setItems(ListManagement.getAllCountries());

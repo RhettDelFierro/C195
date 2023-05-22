@@ -11,6 +11,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+/**
+ * Helper class for miscellaneous methods. Especially those with side-effects.
+ */
 public class Utils {
 
     /**

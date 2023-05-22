@@ -14,7 +14,9 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
-
+/**
+ * Controller for Modify Customer page.
+ */
 public class ModifyCustomerController implements Initializable {
     @FXML
     private TextField customerIdTxt;
@@ -31,6 +33,10 @@ public class ModifyCustomerController implements Initializable {
     @FXML
     private TextField postalCodeTxt;
 
+    /**
+     * Used to load the customer app when visiting the page from the main scren.
+     * @param customer the customer chosen.
+     */
     public void sendCustomer(Customer customer) {
         customerIdTxt.setText(String.valueOf(customer.getCustomerId()));
         nameTxt.setText(customer.getCustomerName());
@@ -43,12 +49,22 @@ public class ModifyCustomerController implements Initializable {
         divisionCombo.setValue(ListManagement.getDivisionById(customer.getDivisionId()));
     }
 
+    /**
+     * Action event handler for changing country.
+     * This will update the division combo box to only show divisions from the selected country.
+     * @param event the action event
+     */
     @FXML
     void onActionCountryCombo(ActionEvent event) {
         Country country = countryCombo.getSelectionModel().getSelectedItem();
         divisionCombo.setItems(ListManagement.getDivisionsByCountryId(country.getCountryId()));
     }
 
+    /**
+     * Action event handler for changing division.
+     * This will update the country combo box to show the country of the selected division.
+     * @param event the action event
+     */
     @FXML
     void onActionDivisionCombo(ActionEvent event) {
         Division division = divisionCombo.getSelectionModel().getSelectedItem();
@@ -69,6 +85,13 @@ public class ModifyCustomerController implements Initializable {
         Utils.changeScene(event, "central-view");
     }
 
+    /**
+     * Action event handler for clicking the Save Button. This will save the updated customer to the database.
+     *
+     * @param event the action event
+     * @throws SQLException a SQLException that bubbles up.
+     * @throws IOException an IOException that bubbles up.
+     */
     @FXML
     void onActionSaveCustomer(ActionEvent event) throws SQLException, IOException {
         if (countryCombo.getSelectionModel().getSelectedItem() == null) {
@@ -93,6 +116,11 @@ public class ModifyCustomerController implements Initializable {
         ListManagement.updateCustomer(event, customer);
     }
 
+    /**
+     * Initializes the controller class. Mainly used to populate the combo boxes.
+     * @param url the url
+     * @param rb the resource bundle
+     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         countryCombo.setItems(ListManagement.getAllCountries());

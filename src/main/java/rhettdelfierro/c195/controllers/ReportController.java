@@ -21,6 +21,9 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 
+/**
+ * Controller for Report page.
+ */
 public class ReportController implements Initializable {
 
     @FXML
@@ -60,11 +63,21 @@ public class ReportController implements Initializable {
     @FXML
     private TableView<Appointment> appointmentsTable;
     ObservableList<String> months = FXCollections.observableArrayList();
+
+    /**
+     * Handles the cancel button action. Goes back to the main screen.
+     * @param event ActionEvent
+     * @throws IOException Exception that may be thrown when changing routes.
+     */
     @FXML
     void onActionCancel(ActionEvent event) throws IOException {
         Utils.changeScene(event, "central-view");
     }
 
+    /**
+     * Handles the contact combo box action. Filters the appointments table by contact.
+     * @param event ActionEvent
+     */
     @FXML
     void onActionContactCombo(ActionEvent event) {
         Contact contact = contactCombo.getSelectionModel().getSelectedItem();
@@ -73,6 +86,10 @@ public class ReportController implements Initializable {
         }
     }
 
+    /**
+     * Handles the month combo box action. Filters the appointments table by month.
+     * @param event ActionEvent
+     */
     @FXML
     void onActionMonthCombo(ActionEvent event) {
         String month = monthCombo.getValue();
@@ -80,6 +97,12 @@ public class ReportController implements Initializable {
             typeTable.setItems(ListManagement.getAppointmentsByMonth(month));
         }
     }
+
+    /**
+     * Initializes the Report page. Populates the tables and combo boxes.
+     * @param url URL
+     * @param resourceBundle ResourceBundle
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {

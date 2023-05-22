@@ -1,5 +1,8 @@
 package rhettdelfierro.c195.models;
 
+/**
+ * This class is used to create MonthlyTypeReport objects.
+ */
 public class MonthlyTypeReport {
     private String type;
     private String month;

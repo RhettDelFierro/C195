@@ -8,7 +8,15 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * This class is used to interact with the contacts table in the database.
+ */
 public class ContactStore {
+    /**
+     * This method is used to fetch all contacts from the database.
+     * @return ObservableList of Contact objects.
+     * @throws SQLException
+     */
     public static ObservableList<Contact> fetchAll() throws SQLException {
         String sql = "SELECT * FROM CONTACTS";
         PreparedStatement ps = JDBC.connection.prepareStatement(sql);
@@ -24,6 +32,12 @@ public class ContactStore {
         return contacts;
     }
 
+    /**
+     * This method is used to select a contact by their ID.
+     * @param contactId ID of the contact to be selected.
+     * @return Contact object.
+     * @throws SQLException Exception thrown if the database query fails.
+     */
     public static Contact selectContactById(int contactId) throws SQLException {
         String sql = "SELECT * FROM CONTACTS WHERE Contact_ID = ?";
         PreparedStatement ps = JDBC.connection.prepareStatement(sql);

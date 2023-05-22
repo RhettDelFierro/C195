@@ -7,6 +7,9 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 
+/**
+ * Helper class for date and time conversions.
+ */
 public class DateTime {
     private final static int openingHour = 8;
     private final static int closingHour = 22;

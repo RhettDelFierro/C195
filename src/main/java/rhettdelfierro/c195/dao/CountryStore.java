@@ -8,7 +8,15 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * This class is used to interact with the countries table in the database.
+ */
 public class CountryStore {
+    /**
+     * This method is used to fetch all countries from the database.
+     * @return ObservableList of Country objects.
+     * @throws SQLException Exception thrown if the database query fails.
+     */
     public static ObservableList<Country> fetchAll() throws SQLException {
         String sql = "SELECT * FROM COUNTRIES";
         PreparedStatement ps = JDBC.connection.prepareStatement(sql);

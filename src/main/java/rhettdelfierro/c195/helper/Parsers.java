@@ -1,5 +1,9 @@
 package rhettdelfierro.c195.helper;
 
+/**
+ * Helper class to parse strings for valid integers and doubles.
+ * This module would have been used to clean or verify texts.
+ */
 public class Parsers {
 
     /**
