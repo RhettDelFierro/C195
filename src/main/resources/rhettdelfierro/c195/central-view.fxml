@@ -199,9 +199,14 @@
                 </BorderPane>
             </children>
         </HBox>
-        <HBox layoutX="1308.0" layoutY="454.0" prefHeight="62.0" prefWidth="140.0">
+        <HBox layoutX="1239.0" layoutY="456.0" prefHeight="60.0" prefWidth="209.0">
             <children>
-                <Button mnemonicParsing="false" onAction="#onActionExitProgram" text="Exit">
+            <Button maxWidth="110.0" mnemonicParsing="false" onAction="#onActionGoToReports" text="Go To Reports">
+               <HBox.margin>
+                  <Insets right="15.0" />
+               </HBox.margin>
+            </Button>
+                <Button maxWidth="110.0" mnemonicParsing="false" onAction="#onActionExitProgram" text="Exit Program">
                     <HBox.margin>
                         <Insets />
                     </HBox.margin>

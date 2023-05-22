@@ -137,6 +137,11 @@ public class CentralController implements Initializable {
         Utils.changeScene(event, "add-customer");
     }
 
+    @FXML
+    void onActionGoToReports(ActionEvent event) throws IOException {
+        Utils.changeScene(event, "reports");
+    }
+
     /**
      * Deletes parts.
      *

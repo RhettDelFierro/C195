@@ -84,4 +84,10 @@ public class DateTime {
 
         return !zonedStartTime.isBefore(eightAm) && !zonedEndTime.isAfter(tenPm);
     }
+
+    public static String getMonthFromTime(String time) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime dateTime = LocalDateTime.parse(time, formatter);
+        return Parsers.capitalizeFirstLetter(dateTime.getMonth().name());
+    }
 }

@@ -10,8 +10,13 @@ import rhettdelfierro.c195.models.*;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.function.Predicate;
+import java.util.Map;
+import java.util.stream.Collectors;
 
+/**
+ * This class is used to manage the lists of data that are used throughout the application.
+ * Rather than the application use the Datastores themselves this acts as a sort of middleware.
+ */
 public class ListManagement {
     public static ObservableList<Appointment> appointments = FXCollections.observableArrayList();
     public static ObservableList<Customer> customers = FXCollections.observableArrayList();
@@ -19,6 +24,8 @@ public class ListManagement {
     public static ObservableList<Division> divisions = FXCollections.observableArrayList();
     public static ObservableList<Contact> contacts = FXCollections.observableArrayList();
     public static ObservableList<User> users = FXCollections.observableArrayList();
+    public static ObservableList<DivisionReport> divisionReports = FXCollections.observableArrayList();
+    public static ObservableList<MonthlyTypeReport> monthlyTypeReports = FXCollections.observableArrayList();
     public static User currentUser = null;
 
     /**
@@ -34,6 +41,7 @@ public class ListManagement {
         contacts = ContactStore.fetchAll();
         divisions = DivisionStore.fetchAll();
         users = UserStore.fetchAll();
+        divisionReports = DivisionStore.getReports();
         currentUser = user;
         for (Country country : countries) {
             ObservableList<Division> divisions = DivisionStore.selectByCountryId(country.getCountryId());
@@ -63,6 +71,8 @@ public class ListManagement {
         divisions = DivisionStore.fetchAll();
         contacts = ContactStore.fetchAll();
         users = UserStore.fetchAll();
+        divisionReports = DivisionStore.getReports();
+
         for (Country country : countries) {
             ObservableList<Division> divisions = DivisionStore.selectByCountryId(country.getCountryId());
             country.setDivisions(divisions);
@@ -121,6 +131,35 @@ public class ListManagement {
      */
     public static ObservableList<Contact> getAllContacts() {
         return contacts;
+    }
+
+    /**
+     * Getter for division reports.
+     *
+     * @return the division reports
+     */
+    public static ObservableList<DivisionReport> getAllDivisionReports() {
+        return divisionReports;
+    }
+
+    /**
+     * Getter for monthly type reports.
+     * Lambda function to utilize de-limiters to split the type and month.
+     * Another lambda function was used as a callback function to add the new monthly type report to the list.
+     * @return the monthly type reports
+     */
+    public static ObservableList<MonthlyTypeReport> getAllMonthlyTypeReports() {
+        Map<String, Long> counts = appointments.stream()
+                .collect(Collectors.groupingBy(a -> a.getType() + "<->" + DateTime.getMonthFromTime(a.getStart()), Collectors.counting()));
+
+        ObservableList<MonthlyTypeReport> monthlyReports = FXCollections.observableArrayList();
+        counts.forEach((key, value) -> {
+            String[] parts = key.split("<->");
+            monthlyReports.add(new MonthlyTypeReport(parts[0], parts[1], value.intValue()));
+        });
+        monthlyTypeReports = monthlyReports;
+
+        return monthlyTypeReports;
     }
 
 
@@ -228,7 +267,8 @@ public class ListManagement {
 
     /**
      * Create a new appointment.
-     *
+     * Lambda function used here as a callback. There is another similar function but different in updateAppointment,
+     * this makes a good use case for create a lambda function.
      * @param event       the event to change the scene.
      * @param appointment the appointment to create.
      * @throws SQLException
@@ -251,10 +291,9 @@ public class ListManagement {
             return;
         }
 
-        Predicate<Appointment> predicate = a -> a.getCustomerId() == appointment.getCustomerId() &&
+        ObservableList<Appointment> filteredList = appointments.filtered(a -> a.getCustomerId() == appointment.getCustomerId() &&
                 (DateTime.isTimeBetweenTwoLocalTimes(appointment.getStart(), a.getStart(), a.getEnd()) ||
-                DateTime.isTimeBetweenTwoLocalTimes(appointment.getEnd(), a.getStart(), a.getEnd()));
-        ObservableList<Appointment> filteredList = appointments.filtered(predicate);
+                        DateTime.isTimeBetweenTwoLocalTimes(appointment.getEnd(), a.getStart(), a.getEnd())));
         if (filteredList.size() > 0) {
             Errors.showErrorDialog("Appointment clashes with another appointment. Please choose another time.");
             return;
@@ -267,6 +306,15 @@ public class ListManagement {
         Utils.changeScene(event, "central-view");
     }
 
+    /**
+     * Update an appointment.
+     * Lambda function used here as a callback. There is another similar function but different in createAppointment,
+     * this makes a good use case for create a lambda function.
+     * @param event       the event to change the scene.
+     * @param appointment the appointment to update.
+     * @throws SQLException
+     * @throws IOException
+     */
     public static void updateAppointment(ActionEvent event, Appointment appointment) throws SQLException, IOException {
         if (DateTime.isBeforeCurrentTime(appointment.getStart())) {
             Errors.showErrorDialog("Appointment cannot be in the past.");
@@ -281,18 +329,16 @@ public class ListManagement {
             return;
         }
 
-        Predicate<Appointment> predicate = a -> (a.getAppointmentId() != appointment.getAppointmentId()) &&
+        ObservableList<Appointment> filteredList = appointments.filtered(a -> (a.getAppointmentId() != appointment.getAppointmentId()) &&
                 a.getCustomerId() == appointment.getCustomerId() &&
                 (DateTime.isTimeBetweenTwoLocalTimes(appointment.getStart(), a.getStart(), a.getEnd()) ||
-                        DateTime.isTimeBetweenTwoLocalTimes(appointment.getEnd(), a.getStart(), a.getEnd()));
-        ObservableList<Appointment> filteredList = appointments.filtered(predicate);
+                        DateTime.isTimeBetweenTwoLocalTimes(appointment.getEnd(), a.getStart(), a.getEnd())));
         if (filteredList.size() > 0) {
             Errors.showErrorDialog("Appointment clashes with another appointment. Please choose another time.");
             return;
         }
 
-        // remember you need to check if the appointment clashes with another appointment.
-        // if it does, then you need to throw an error.
+
         int rowsAffected = AppointmentStore.update(appointment);
         if (rowsAffected == 0) {
             Errors.showErrorDialog("An error has occurred trying to save to the database.");
@@ -301,6 +347,14 @@ public class ListManagement {
         Utils.changeScene(event, "central-view");
     }
 
+    /**
+     * Create a new customer.
+     *
+     * @param event    the event to change the scene.
+     * @param customer the customer to create.
+     * @throws SQLException
+     * @throws IOException
+     */
     public static void createCustomer(ActionEvent event, Customer customer) throws SQLException, IOException {
         int rowsAffected = CustomerStore.insert(customer);
         if (rowsAffected == 0) {
@@ -310,6 +364,14 @@ public class ListManagement {
         Utils.changeScene(event, "central-view");
     }
 
+    /**
+     * Update a customer.
+     *
+     * @param event    the event to change the scene.
+     * @param customer the customer to update.
+     * @throws SQLException
+     * @throws IOException
+     */
     public static void updateCustomer(ActionEvent event, Customer customer) throws SQLException, IOException {
         int rowsAffected = CustomerStore.update(customer);
         if (rowsAffected == 0) {
@@ -319,6 +381,11 @@ public class ListManagement {
         Utils.changeScene(event, "central-view");
     }
 
+    /**
+     * Get a country by id.
+     * @param countryId
+     * @return country
+     */
     public static Country getCountryById(int countryId) {
         for (Country country : countries) {
             if (country.getCountryId() == countryId) {
@@ -328,6 +395,11 @@ public class ListManagement {
         return null;
     }
 
+    /**
+     * Get a division by id.
+     * @param divisionId
+     * @return division
+     */
     public static Division getDivisionById(int divisionId) {
         for (Division division : divisions) {
             if (division.getDivisionId() == divisionId) {
@@ -337,6 +409,11 @@ public class ListManagement {
         return null;
     }
 
+    /**
+     * Get an appointment by id.
+     * @param appointmentId
+     * @return appointment
+     */
     public static Appointment getAppointmentById(int appointmentId) {
         for (Appointment appointment : appointments) {
             if (appointment.getAppointmentId() == appointmentId) {
@@ -346,6 +423,11 @@ public class ListManagement {
         return null;
     }
 
+    /**
+     * Get a contact by id.
+     * @param contactId
+     * @return contact
+     */
     public static Contact getContactById(int contactId) {
         for (Contact contact : contacts) {
             if (contact.getContactId() == contactId) {
@@ -355,6 +437,11 @@ public class ListManagement {
         return null;
     }
 
+    /**
+     * Get a customer by id.
+     * @param customerId
+     * @return customer
+     */
     public static Customer getCustomerById(int customerId) {
         for (Customer customer : customers) {
             if (customer.getCustomerId() == customerId) {
@@ -364,6 +451,11 @@ public class ListManagement {
         return null;
     }
 
+    /**
+     * Get a user by id.
+     * @param userId
+     * @return user
+     */
     public static User getUserById(int userId) {
         for (User user : users) {
             if (user.getUserId() == userId) {
@@ -371,5 +463,29 @@ public class ListManagement {
             }
         }
         return null;
+    }
+
+    /**
+     * Get all appointments for a given month.
+     * Lambda used here as a first class function for filtering.
+     *
+     * @param month the month to get appointments for.
+     * @return an observable list of appointments.
+     */
+    public static ObservableList<MonthlyTypeReport>getAppointmentsByMonth(String month) {
+        return monthlyTypeReports.filtered(m -> {
+            System.out.println(m.getMonth());
+           return m.getMonth().equals(month);
+        });
+    }
+
+    /**
+     * Get all appointments for a given contact.
+     * Lambda used here as a first class function for filtering.
+     * @param contact the contact to get appointments for.
+     * @return an observable list of appointments.
+     */
+    public static ObservableList<Appointment> getAppointmentsByContact(Contact contact) {
+        return appointments.filtered(a -> a.getContactId() == contact.getContactId());
     }
 }

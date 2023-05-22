@@ -18,7 +18,7 @@ public class Utils {
      * @throws IOException if getResource() fails to find the .fxml file
      */
     public static void changeScene(ActionEvent event, String viewName) throws IOException {
-        int width = viewName == "central-view" ? 1500 : 750;
+        int width = viewName == "central-view" || viewName == "reports" ? 1500 : 750;
         Stage stage = (Stage) ((Button)event.getSource()).getScene().getWindow();
         Parent scene = FXMLLoader.load(Utils.class.getResource("/rhettdelfierro/c195/" + viewName + ".fxml"));
         stage.setScene(new Scene(scene, width, 530));

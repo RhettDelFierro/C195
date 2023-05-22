@@ -1,7 +1,9 @@
 package rhettdelfierro.c195.dao;
 
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import rhettdelfierro.c195.models.Division;
+import rhettdelfierro.c195.models.DivisionReport;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -22,6 +24,7 @@ public class DivisionStore {
         }
         return divisions;
     }
+
     public static ObservableList<Division> selectByCountryId(int countryId) throws SQLException {
         String sql = "SELECT * FROM FIRST_LEVEL_DIVISIONS WHERE COUNTRY_ID = ?";
         PreparedStatement ps = JDBC.connection.prepareStatement(sql);
@@ -51,5 +54,20 @@ public class DivisionStore {
             );
         }
         return null;
+    }
+
+    public static ObservableList<DivisionReport> getReports() throws SQLException {
+        String sql = "SELECT fld.Division, COUNT(cus.Division_ID) AS Count FROM first_level_divisions AS fld LEFT JOIN customers AS cus ON fld.Division_ID = cus.Division_ID GROUP BY fld.Division;";
+        PreparedStatement ps = JDBC.connection.prepareStatement(sql);
+        ResultSet rs = ps.executeQuery();
+        ObservableList<DivisionReport> divisionReports = FXCollections.observableArrayList();
+        while (rs.next()) {
+            divisionReports.add(new DivisionReport(
+                            rs.getString("DIVISION"),
+                            rs.getInt("COUNT")
+                    )
+            );
+        }
+        return divisionReports;
     }
 }

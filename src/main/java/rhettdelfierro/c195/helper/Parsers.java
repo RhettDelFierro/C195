@@ -19,4 +19,16 @@ public class Parsers {
     public static boolean checkValidDouble(String str){
         return str.matches("^[-+]?\\d*\\.?\\d+$");
     }
+
+    /**
+     * Helper to capitalize the first letter of a string.
+     * @param original the string to capitalize.
+     * @return the capitalized string.
+     */
+    public static String capitalizeFirstLetter(String original) {
+        if (original == null || original.length() == 0) {
+            return original;
+        }
+        return original.substring(0, 1).toUpperCase() + original.substring(1).toLowerCase();
+    }
 }
