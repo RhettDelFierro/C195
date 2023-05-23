@@ -43,6 +43,8 @@ public class CustomerStore {
         ps.setString(4, customer.getPhone());
         ps.setInt(5, customer.getDivisionId());
         ps.setInt(6, customer.getCustomerId());
+        System.out.println(sql);
+        System.out.println(ps.toString());
         int rowsAffected = ps.executeUpdate();
         return rowsAffected;
     }

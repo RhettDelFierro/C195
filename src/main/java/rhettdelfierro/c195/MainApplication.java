@@ -17,6 +17,12 @@ public class MainApplication extends Application {
         stage.show();
     }
 
+    /**
+     * Main method.
+     * Javadocs located in ./javadocs folder.
+     *
+     * @param args the command line arguments
+     */
     public static void main(String[] args) {
         JDBC.openConnection();
         launch();

@@ -112,7 +112,7 @@ public class ModifyCustomerController implements Initializable {
         String phone = phoneTxt.getText();
         String postalCode = postalCodeTxt.getText();
         Division division = divisionCombo.getSelectionModel().getSelectedItem();
-        Customer customer = new Customer(name, address, postalCode, phone, division.getDivisionId());
+        Customer customer = new Customer(Integer.parseInt(customerIdTxt.getText()),name, address, postalCode, phone, division.getDivisionId());
         ListManagement.updateCustomer(event, customer);
     }
 
